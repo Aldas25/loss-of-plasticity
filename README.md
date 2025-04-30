@@ -62,10 +62,12 @@ The package has been tested on Ubuntu 20.04 and python3.8. We expect this packag
 
 ## Installation Guide
 
+**Note**: Original installation guide used python3.8, I changed to path python3, which in my system is python 3.10. It also works.
+
 Create a virtual environment
 ```sh
 mkdir ~/envs
-virtualenv --no-download --python=/usr/bin/python3.8 ~/envs/lop
+virtualenv --no-download --python=/usr/bin/python3 ~/envs/lop
 source ~/envs/lop/bin/activate
 pip3 install --no-index --upgrade pip
 ```
@@ -79,6 +81,7 @@ pip3 install -e .
 ```
 
 Add this lines in your `~/.zshrc` or `~/.bashrc`
+**Note**: unsure, why original setup guide has this. It's better to only turn on your environment once you need it.
 ```sh
 source ~/envs/lop/bin/activate
 ```
