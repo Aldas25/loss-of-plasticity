@@ -3,7 +3,7 @@
 
   "_comment_1_": "List of problem/experiment parameters",
   "gen_prob_data": false,
-  "num_runs":  100,
+  "num_runs":  3,
   "num_inputs": 20,
   "num_data_points": 5e6,
   "data_dir": "data/sgd/bp/linear_1/",

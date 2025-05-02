@@ -3,9 +3,9 @@
 
   "_comment_1_": "List of problem/experiment parameters",
   "gen_prob_data": false,
-  "num_runs":  1,
+  "num_runs":  30,
   "num_inputs": 20,
-  "num_data_points": 1e6,
+  "num_data_points": 1e5,
   "data_dir": "data/sgd/cbp/relu/",
   "env_data_dir": "data/env_data/scr/",
   "flip_after": 10000,
@@ -21,7 +21,7 @@
   "util_type": "adaptable_contribution",
   "opt": "sgd",
   "step_size": 0.01,
-  "replacement_rate": [1e-6, 1e-5, 1e-4, 1e-3, 1e-2],
+  "replacement_rate": [1e-5, 1e-4, 1e-3],
   "decay_rate": 0.99,
   "maturity_threshold": 100
 }

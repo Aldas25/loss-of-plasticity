@@ -2,6 +2,7 @@ import sys
 import json
 import pickle
 import argparse
+import os
 from lop.nets.ffnn import FFNN
 from lop.nets.linear import MyLinear
 from lop.algos.bp import Backprop
@@ -78,6 +79,7 @@ def expr(params: {}):
             perturb_scale=perturb_scale,
         )
     elif agent_type == 'cbp':
+        util_save_dir = params['data_file'].replace("data", "utils_saved")
         learner = ContinualBackprop(
             net=net,
             step_size=step_size,
@@ -89,6 +91,7 @@ def expr(params: {}):
             util_type=util_type,
             init=init,
             accumulate=accumulate,
+            util_save_dir=util_save_dir,
         )
 
     with open(env_file, 'rb+') as f:
@@ -140,6 +143,7 @@ def main(arguments):
 
     data = expr(params)
 
+    os.makedirs(os.path.dirname(params['data_file']), exist_ok=True)
     with open(params['data_file'], 'wb+') as f:
         pickle.dump(data, f)
 

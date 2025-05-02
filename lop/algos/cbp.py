@@ -25,7 +25,8 @@ class ContinualBackprop(object):
             accumulate=False,
             momentum=0,
             outgoing_random=False,
-            weight_decay=0
+            weight_decay=0,
+            util_save_dir='util_save_dir',
     ):
         self.net = net
 
@@ -57,6 +58,9 @@ class ContinualBackprop(object):
             accumulate=accumulate,
         )
 
+        self.iteration_counter = 0
+        self.util_save_dir = util_save_dir 
+
     def learn(self, x, target):
         """
         Learn using one step of gradient-descent and generate-&-test
@@ -77,7 +81,8 @@ class ContinualBackprop(object):
         # take a generate-and-test step
         self.opt.zero_grad()
         if type(self.gnt) is GnT:
-            self.gnt.gen_and_test(features=self.previous_features)
+            self.gnt.gen_and_test(features=self.previous_features, util_save_dir=f'{self.util_save_dir}/iter_{self.iteration_counter}')
+            self.iteration_counter += 1
 
         if self.loss_func == F.cross_entropy:
             return loss.detach(), output.detach()

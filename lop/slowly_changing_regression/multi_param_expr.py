@@ -3,6 +3,7 @@ import json
 import copy
 import argparse
 import subprocess
+import os
 from lop.utils.miscellaneous import *
 
 
@@ -19,6 +20,8 @@ def main(arguments):
         params = json.load(f)
 
     list_params, hyper_param_settings = get_configurations(params=params)
+    print(f'list_params: {list_params}')
+    print(f'hyper_param_settings: {hyper_param_settings}')
 
     # make a directory for temp cfg files
     bash_command = "mkdir -p temp_cfg/"
@@ -51,7 +54,7 @@ def main(arguments):
 
     bash_command = "rm -r --force " + params['data_dir']
     subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
-    bash_command = "mkdir " + params['data_dir']
+    bash_command = "mkdir -p " + params['data_dir']
     subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
 
     """

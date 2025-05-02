@@ -43,8 +43,8 @@ def main(arguments):
     indices = [i for i in range(3)]
     for i in indices:
         performances.append(add_cfg_performance(cfg=cfg_file, setting_idx=i, m=m, num_runs=num_runs))
-    performances.append(add_cfg_performance(cfg='../cfg/' + params['opt'] + '/bp/linear.json', setting_idx=0, m=m, num_runs=num_runs))
-    labels.append('linear')
+    # performances.append(add_cfg_performance(cfg='../cfg/' + params['opt'] + '/bp/linear.json', setting_idx=0, m=m, num_runs=num_runs))
+    # labels.append('linear')
     performances = np.array(performances)
 
     if params['hidden_activation'] in ['relu', 'swish', 'leaky_relu']:

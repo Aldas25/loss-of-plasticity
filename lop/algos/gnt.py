@@ -1,4 +1,5 @@
 import sys
+import os
 import torch
 from math import sqrt
 import torch.nn.functional as F
@@ -119,7 +120,7 @@ class GnT(object):
             if self.util_type == 'random':
                 self.bias_corrected_util[layer_idx] = torch.rand(self.util[layer_idx].shape)
 
-    def test_features(self, features):
+    def test_features(self, features, util_save_dir):
         """
         Args:
             features: Activation values in the neural network
@@ -176,6 +177,19 @@ class GnT(object):
             features_to_replace[i] = new_features_to_replace
             num_features_to_replace[i] = num_new_features_to_replace
 
+            # Addition from me, since i am getting bias corrected util as well:
+            self.bias_corrected_util[i][new_features_to_replace] = 0  # this is not correct if self.util_type is random
+
+        # print('-----------------------------------')
+        # print(self.util)
+        # print(self.bias_corrected_util)
+        # quit(0)
+
+        # Save util and bias_corrected_util
+        os.makedirs(util_save_dir, exist_ok=True)
+        torch.save(self.util, util_save_dir + '/util.pt')
+        torch.save(self.bias_corrected_util, util_save_dir + '/bias_corrected_util.pt')
+
         return features_to_replace, num_features_to_replace
 
     def gen_new_features(self, features_to_replace, num_features_to_replace):
@@ -224,7 +238,7 @@ class GnT(object):
                 self.opt.state[self.net[i * 2 + 2].weight]['exp_avg_sq'][:, features_to_replace[i]] = 0.0
                 self.opt.state[self.net[i * 2 + 2].weight]['step'][:, features_to_replace[i]] = 0
 
-    def gen_and_test(self, features):
+    def gen_and_test(self, features, util_save_dir='tmp_utils'):
         """
         Perform generate-and-test
         :param features: activation of hidden units in the neural network
@@ -232,6 +246,6 @@ class GnT(object):
         if not isinstance(features, list):
             print('features passed to generate-and-test should be a list')
             sys.exit()
-        features_to_replace, num_features_to_replace = self.test_features(features=features)
+        features_to_replace, num_features_to_replace = self.test_features(features=features, util_save_dir=util_save_dir)
         self.gen_new_features(features_to_replace, num_features_to_replace)
         self.update_optim_params(features_to_replace, num_features_to_replace)
