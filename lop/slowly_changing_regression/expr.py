@@ -92,6 +92,13 @@ def expr(params: {}):
             accumulate=accumulate,
         )
 
+    # wandb.init(
+    #     project=params['wandb_project'],
+    #     config=params,
+    #     name=params['wandb_run_name'],
+    #     group=params['wandb_group'],
+    # )
+
     with open(env_file, 'rb+') as f:
         inputs, outputs, _ = pickle.load(f)
 

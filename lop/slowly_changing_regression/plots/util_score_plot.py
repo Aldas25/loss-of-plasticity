@@ -10,7 +10,8 @@ from lop.utils.plot_online_performance import generate_online_performance_plot
 
 def create_histogram(filename='util_histogram.png', title='title', util_data=None, normalize=False):
     data = np.array([t.numpy() for t in util_data])
-    print(f'{title}, data: {data}')
+    data = data.flatten()
+    print(f'{title}, data: {data[:20]}')
 
     if normalize: # TODO
         print(f'TODO NORMALIZATION ')
@@ -61,6 +62,8 @@ def main(arguments):
                 bias_corrected_util_data = pickle.load(f)
 
             print(f'setting_idx: {setting_idx}, idx: {idx}, data size: {len(util_data)}, {len(bias_corrected_util_data)}')
+            # print(f'Util data: {util_data[:20]}')
+            # print(f'Bias corrected util data: {bias_corrected_util_data[:20]}')
 
             create_histogram(filename=os.path.join(util_save_dir, 'util_histogram.png'), 
                              title='util_histogram', 

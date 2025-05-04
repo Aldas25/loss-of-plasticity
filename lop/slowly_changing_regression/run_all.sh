@@ -9,10 +9,10 @@
 
 echo "Starting the script..."
 
-source ~/envs/lop/bin/activate
+# source ~/envs/lop/bin/activate
 
 # Remove previous data and create new directories
-rm -rf data env_temp_cfg temp_cfg
+rm -rf data env_temp_cfg temp_cfg utils_saved
 mkdir -p env_temp_cfg temp_cfg
 
 # Create temporary configuration files in env_temp_cfg

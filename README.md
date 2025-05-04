@@ -68,6 +68,8 @@ Create a virtual environment
 ```sh
 mkdir ~/envs
 virtualenv --no-download --python=/usr/bin/python3 ~/envs/lop
+# or: conda create --name lop python=3.9 ## somehow python 3.8 has bad dependencies (one of the requirements packages cannot be downloaded)
+# and then: conda activate lop
 source ~/envs/lop/bin/activate
 pip3 install --no-index --upgrade pip
 ```

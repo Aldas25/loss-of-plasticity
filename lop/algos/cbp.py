@@ -84,6 +84,7 @@ class ContinualBackprop(object):
         self.opt.zero_grad()
         if type(self.gnt) is GnT:
             cur_util, cur_bias_corrected_util = self.gnt.gen_and_test(features=self.previous_features)
+            # self.gnt.gen_and_test(features=self.previous_features)
             self.util.append(self.copy_util_score(cur_util))
             self.bias_corrected_util.append(self.copy_util_score(cur_bias_corrected_util))
 

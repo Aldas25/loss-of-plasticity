@@ -76,6 +76,8 @@ def main(arguments):
         for idx in tqdm(range(params['num_runs'])):
             new_params['data_file'] = new_params['data_dir'] + str(idx)
             new_params['env_file'] = new_params['env_data_dir'] + str(idx)
+            # new_params['wandb_run_name'] = f'run_{idx}'
+            # new_params['wandb_group'] = f'agent={new_params["agent"]}-replacement_rate={new_params["replacement_rate"]}'
 
             """
                 write data in config files

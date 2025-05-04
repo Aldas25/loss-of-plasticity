@@ -14,5 +14,5 @@ data/
 .DS_Store
 
 **/utils_saved/*
-wandb_api_key.py
 **/comparison.png
+**/wandb/*
