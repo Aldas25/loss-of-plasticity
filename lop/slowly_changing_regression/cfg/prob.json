@@ -12,6 +12,7 @@
   "num_target_features": 100,
   "num_flipping_bits": 15,
   "beta": 0.7,
+  "seed": 54631255,
 
   "_comment_2_": "Learner parameters",
   "agent": "bp",

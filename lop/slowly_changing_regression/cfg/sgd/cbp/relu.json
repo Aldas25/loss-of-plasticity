@@ -13,7 +13,6 @@
   "num_flipping_bits": 15,
   "to_log_features": false,
   "beta": 0.7,  
-  "seed": 54631255,
 
   "_comment_2_": "Learner parameters",
   "agent": "cbp",

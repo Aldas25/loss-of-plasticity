@@ -3,9 +3,14 @@ import json
 import torch
 import pickle
 import argparse
+import numpy as np
 from tqdm import tqdm
 from lop.nets.fix_ltu_net import FixLTUNet
 
+# Setting seed for result reproducibility.
+def set_seed(seed):
+    np.random.seed(seed)
+    torch.manual_seed(seed)
 
 def generate_problem_data(
         flip_after=10000,
@@ -67,6 +72,8 @@ def main(arguments):
 
     with open(cfg_file, 'r') as f:
         params = json.load(f)
+
+    set_seed(params['seed'])
 
     if 'target_net_file' not in params.keys():
         params['target_net_file'] = None

@@ -3,14 +3,7 @@ import json
 import copy
 import argparse
 import subprocess
-import os
-import numpy as np
 from lop.utils.miscellaneous import *
-
-# Setting seed for result reproducibility.
-def set_seed(seed):
-    np.random.seed(seed)
-    torch.manual_seed(seed)
 
 
 def main(arguments):
@@ -28,8 +21,6 @@ def main(arguments):
     list_params, hyper_param_settings = get_configurations(params=params)
     print(f'list_params: {list_params}')
     print(f'hyper_param_settings: {hyper_param_settings}')
-
-    set_seed(params['seed'])
 
     # make a directory for temp cfg files
     bash_command = "mkdir -p temp_cfg/"
