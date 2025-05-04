@@ -51,13 +51,14 @@ def main(arguments):
         yticks = [0.6, 0.8, 1., 1.2, 1.4]
     else:
         yticks = [0.4, 0.6, 0.8, 1, 1.2]
+
     print(yticks, params['hidden_activation'])
     generate_online_performance_plot(
         performances=performances,
         colors=['C3', 'C4', 'C5', 'C8'],
-        yticks=yticks,
-        xticks=[0, 500000, 1000000],
-        xticks_labels=['0', '0.5M', '1M'],
+        # yticks=yticks,
+        # xticks=[0, 500000, 1000000],
+        # xticks_labels=['0', '0.5M', '1M'],
         m=m,
         labels=labels
     )

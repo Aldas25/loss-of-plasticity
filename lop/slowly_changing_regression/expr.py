@@ -79,7 +79,6 @@ def expr(params: {}):
             perturb_scale=perturb_scale,
         )
     elif agent_type == 'cbp':
-        util_save_dir = params['data_file'].replace("data", "utils_saved")
         learner = ContinualBackprop(
             net=net,
             step_size=step_size,
@@ -91,7 +90,6 @@ def expr(params: {}):
             util_type=util_type,
             init=init,
             accumulate=accumulate,
-            util_save_dir=util_save_dir,
         )
 
     with open(env_file, 'rb+') as f:
@@ -116,6 +114,21 @@ def expr(params: {}):
             if hidden_activation == 'tanh':
                 activation[i] = (learner.previous_features[0].abs() > 0.9).float().mean()
         errs[i] = err
+
+    if agent_type == 'cbp':
+        # Save util scores
+        util_save_dir = params['data_file'].replace("data", "utils_saved")
+        util_save_file = os.path.join(util_save_dir, 'util')
+        bias_corrected_util_save_file = os.path.join(util_save_dir, 'bias_corrected_util')
+        os.makedirs(util_save_dir, exist_ok=True)
+        print(f'util score shape: {len(learner.util)}')
+        print(f'Saving util scores to {util_save_file}')
+        with open(util_save_file, 'wb+') as f:
+            pickle.dump(learner.util, f)
+        print(f'Bias corrected util score shape: {len(learner.bias_corrected_util)}')
+        print(f'Saving bias corrected util scores to {bias_corrected_util_save_file}')
+        with open(bias_corrected_util_save_file, 'wb+') as f:
+            pickle.dump(learner.bias_corrected_util, f)
 
     data_to_save = {
         'errs': errs.numpy()
