@@ -14,5 +14,4 @@ data/
 .DS_Store
 
 **/utils_saved/*
-**/comparison.png
 **/wandb/*

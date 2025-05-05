@@ -27,13 +27,13 @@ done
 ### CBP
 ###
 
-echo "Starting the CBP experiments..."
+echo "Starting the BP experiments..."
 
 # Clear temp_cfg directory
 rm -rf temp_cfg/*
 
 # Create temporary configuration files in temp_cfg for the BP with Relu
-python3 multi_param_expr.py -c cfg/sgd/cbp/relu.json 
+python3 multi_param_expr.py -c cfg/sgd/bp/relu.json 
 
 # Run the experiment for each configuration file
 for f in temp_cfg/*; do
@@ -41,7 +41,7 @@ for f in temp_cfg/*; do
     python3 expr.py -c "$f"
 done
 
-echo "Finished running the CBP experiments."
+echo "Finished running the BP experiments."
 
 ###
 ### BP with Relu

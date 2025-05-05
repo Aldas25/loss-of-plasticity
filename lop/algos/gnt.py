@@ -120,6 +120,13 @@ class GnT(object):
             if self.util_type == 'random':
                 self.bias_corrected_util[layer_idx] = torch.rand(self.util[layer_idx].shape)
 
+    # Used by BP, so that utility scores are updated, but neurons are not replaced
+    def update_utility_for_logging(self, features):
+        for i in range(self.num_hidden_layers):
+            self.ages[i] += 1
+            self.update_utility(layer_idx=i, features=features[i])
+
+
     def test_features(self, features):
         """
         Args:

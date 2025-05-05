@@ -65,18 +65,19 @@ def main(arguments):
             # print(f'Util data: {util_data[:20]}')
             # print(f'Bias corrected util data: {bias_corrected_util_data[:20]}')
 
+            iter_x = 1000000 - 1
             create_histogram(filename=os.path.join(util_save_dir, 'util_histogram.png'), 
                              title='util_histogram', 
-                             util_data=util_data[300], normalize=False)
+                             util_data=util_data[iter_x], normalize=False)
             create_histogram(filename=os.path.join(util_save_dir, 'util_histogram_normalized.png'),
                              title='util_histogram_normalized', 
-                             util_data=util_data[300], normalize=True)
+                             util_data=util_data[iter_x], normalize=True)
             create_histogram(filename=os.path.join(util_save_dir, 'bias_corrected_util_histogram.png'), 
                              title='bias_corrected_util_histogram',
-                             util_data=util_data[300], normalize=False)
+                             util_data=util_data[iter_x], normalize=False)
             create_histogram(filename=os.path.join(util_save_dir, 'bias_corrected_util_histogram_normalized.png'), 
                              title='bias_corrected_util_histogram_normalized',
-                             util_data=util_data[300], normalize=True)
+                             util_data=util_data[iter_x], normalize=True)
 
             # Online performance
             # per_param_setting_performance.append(np.array(bin_m_errs(errs=data['errs'], m=m)))
