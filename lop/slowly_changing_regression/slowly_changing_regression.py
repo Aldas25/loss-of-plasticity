@@ -3,14 +3,10 @@ import json
 import torch
 import pickle
 import argparse
-import numpy as np
 from tqdm import tqdm
+from lop.utils.set_seed import set_seed
 from lop.nets.fix_ltu_net import FixLTUNet
 
-# Setting seed for result reproducibility.
-def set_seed(seed):
-    np.random.seed(seed)
-    torch.manual_seed(seed)
 
 def generate_problem_data(
         flip_after=10000,

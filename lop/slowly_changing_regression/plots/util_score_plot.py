@@ -65,7 +65,7 @@ def main(arguments):
             # print(f'Util data: {util_data[:20]}')
             # print(f'Bias corrected util data: {bias_corrected_util_data[:20]}')
 
-            iter_x = 1000000 - 1
+            iter_x = len(util_data) - 1
             create_histogram(filename=os.path.join(util_save_dir, 'util_histogram.png'), 
                              title='util_histogram', 
                              util_data=util_data[iter_x], normalize=False)

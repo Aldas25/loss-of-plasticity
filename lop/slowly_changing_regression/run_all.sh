@@ -33,7 +33,7 @@ echo "Starting the BP experiments..."
 rm -rf temp_cfg/*
 
 # Create temporary configuration files in temp_cfg for the BP with Relu
-python3 multi_param_expr.py -c cfg/sgd/bp/relu.json 
+python3 multi_param_expr.py -c cfg/sgd/shrink-and-perturb/snp.json 
 
 # Run the experiment for each configuration file
 for f in temp_cfg/*; do

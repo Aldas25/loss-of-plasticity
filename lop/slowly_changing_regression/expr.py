@@ -3,6 +3,7 @@ import json
 import pickle
 import argparse
 import os
+from lop.utils.set_seed import set_seed
 from lop.nets.ffnn import FFNN
 from lop.nets.linear import MyLinear
 from lop.algos.bp import Backprop
@@ -160,6 +161,8 @@ def main(arguments):
 
     with open(cfg_file, 'r') as f:
         params = json.load(f)
+
+    set_seed(params['seed'])
 
     data = expr(params)
 

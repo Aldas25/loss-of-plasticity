@@ -3,6 +3,7 @@ import json
 import copy
 import argparse
 import subprocess
+from lop.utils.set_seed import set_seed
 from lop.utils.miscellaneous import *
 
 
@@ -17,6 +18,8 @@ def main(arguments):
 
     with open(cfg_file, 'r') as f:
         params = json.load(f)
+
+    set_seed(params['seed'])
 
     list_params, hyper_param_settings = get_configurations(params=params)
     print(f'list_params: {list_params}')
