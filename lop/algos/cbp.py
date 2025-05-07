@@ -11,6 +11,8 @@ class ContinualBackprop(object):
     def __init__(
             self,
             net,
+            util_save_dir,
+            util_save_every_nth_iteration,
             step_size=0.001,
             loss='mse',
             opt='sgd',
@@ -47,6 +49,8 @@ class ContinualBackprop(object):
             net=self.net.layers,
             hidden_activation=self.net.act_type,
             opt=self.opt,
+            util_save_dir=util_save_dir,
+            util_save_every_nth_iteration=util_save_every_nth_iteration,
             replacement_rate=replacement_rate,
             decay_rate=decay_rate,
             maturity_threshold=maturity_threshold,
@@ -57,8 +61,8 @@ class ContinualBackprop(object):
             accumulate=accumulate,
         )
 
-        self.util = []
-        self.bias_corrected_util = []
+        # self.util = []
+        # self.bias_corrected_util = []
 
     def copy_util_score(self, array_of_torch_tensors):
         return [x.clone() for x in array_of_torch_tensors]
@@ -83,10 +87,10 @@ class ContinualBackprop(object):
         # take a generate-and-test step
         self.opt.zero_grad()
         if type(self.gnt) is GnT:
-            cur_util, cur_bias_corrected_util = self.gnt.gen_and_test(features=self.previous_features)
-            # self.gnt.gen_and_test(features=self.previous_features)
-            self.util.append(self.copy_util_score(cur_util))
-            self.bias_corrected_util.append(self.copy_util_score(cur_bias_corrected_util))
+            # cur_util, cur_bias_corrected_util = self.gnt.gen_and_test(features=self.previous_features)
+            self.gnt.gen_and_test(features=self.previous_features)
+            # self.util.append(self.copy_util_score(cur_util))
+            # self.bias_corrected_util.append(self.copy_util_score(cur_bias_corrected_util))
 
         if self.loss_func == F.cross_entropy:
             return loss.detach(), output.detach()

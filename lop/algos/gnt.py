@@ -1,6 +1,7 @@
 import sys
 import os
 import torch
+import pickle
 from math import sqrt
 import torch.nn.functional as F
 from lop.utils.AdamGnT import AdamGnT
@@ -15,6 +16,8 @@ class GnT(object):
             net,
             hidden_activation,
             opt,
+            util_save_dir,
+            util_save_every_nth_iteration,
             decay_rate=0.99,
             replacement_rate=1e-4,
             init='kaiming',
@@ -60,6 +63,10 @@ class GnT(object):
         """
         if hidden_activation == 'selu': init = 'lecun'
         self.bounds = self.compute_bounds(hidden_activation=hidden_activation, init=init)
+
+        self.util_save_dir = util_save_dir
+        self.util_save_every_nth_iteration = util_save_every_nth_iteration
+        self.iteration_count = 0
 
     def compute_bounds(self, hidden_activation, init='kaiming'):
         if hidden_activation in ['swish', 'elu']: hidden_activation = 'relu'
@@ -120,11 +127,28 @@ class GnT(object):
             if self.util_type == 'random':
                 self.bias_corrected_util[layer_idx] = torch.rand(self.util[layer_idx].shape)
 
+    def save_cur_utils(self):
+        self.iteration_count += 1
+
+        if (self.iteration_count - 1) % self.util_save_every_nth_iteration != 0:
+            return
+
+        util_save_file = os.path.join(self.util_save_dir, f'util-iteration-{self.iteration_count}')
+        bias_corrected_util_save_file = os.path.join(self.util_save_dir, f'bias_corrected_util-iteration-{self.iteration_count}')
+        
+        with open(util_save_file, 'wb+') as f:
+            pickle.dump(self.util, f)
+        with open(bias_corrected_util_save_file, 'wb+') as f:
+            pickle.dump(self.bias_corrected_util, f)
+
+
     # Used by BP, so that utility scores are updated, but neurons are not replaced
     def update_utility_for_logging(self, features):
         for i in range(self.num_hidden_layers):
             self.ages[i] += 1
             self.update_utility(layer_idx=i, features=features[i])
+
+        self.save_cur_utils()        
 
 
     def test_features(self, features):
@@ -254,7 +278,10 @@ class GnT(object):
             print('features passed to generate-and-test should be a list')
             sys.exit()
         features_to_replace, num_features_to_replace = self.test_features(features=features)
+
+        self.save_cur_utils()
+
         self.gen_new_features(features_to_replace, num_features_to_replace)
         self.update_optim_params(features_to_replace, num_features_to_replace)
 
-        return self.util, self.bias_corrected_util
+        # return self.util, self.bias_corrected_util

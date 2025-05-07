@@ -3,7 +3,7 @@
 
   "_comment_1_": "List of problem/experiment parameters",
   "gen_prob_data": false,
-  "num_runs":  100,
+  "num_runs":  10,
   "num_inputs": 20,
   "num_data_points": 1e6,
   "data_dir": "data/sgd/bp/relu/",
@@ -13,7 +13,9 @@
   "num_flipping_bits": 15,
   "to_log_features": false,
   "beta": 0.7,
-  "seed": 54631255,
+  "seed": 33555713,
+  "temp_cfg_dir": "bp_temp_cfg",
+  "util_save_every_nth_iteration": 10,
 
   "_comment_2_": "Learner parameters",
   "agent": "bp",
