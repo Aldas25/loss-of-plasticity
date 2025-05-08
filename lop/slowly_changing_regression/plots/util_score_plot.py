@@ -95,7 +95,7 @@ def main(arguments):
 
     m = int(params['flip_after'])*2
 
-    iteration_id = 10000 - 1  # the iteration which will have the plot saved
+    iteration_id = 1000 - 1  # the iteration which will have the plot saved
 
     param_settings_names, param_settings = get_configurations(params=params)
     # labels = param_settings

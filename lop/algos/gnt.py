@@ -16,8 +16,8 @@ class GnT(object):
             net,
             hidden_activation,
             opt,
-            util_save_dir,
-            util_save_every_nth_iteration,
+            # util_save_dir,
+            # util_save_every_nth_iteration,
             decay_rate=0.99,
             replacement_rate=1e-4,
             init='kaiming',
@@ -64,9 +64,9 @@ class GnT(object):
         if hidden_activation == 'selu': init = 'lecun'
         self.bounds = self.compute_bounds(hidden_activation=hidden_activation, init=init)
 
-        self.util_save_dir = util_save_dir
-        self.util_save_every_nth_iteration = util_save_every_nth_iteration
-        self.iteration_count = 0
+        # self.util_save_dir = util_save_dir
+        # self.util_save_every_nth_iteration = util_save_every_nth_iteration
+        # self.iteration_count = 0
 
     def compute_bounds(self, hidden_activation, init='kaiming'):
         if hidden_activation in ['swish', 'elu']: hidden_activation = 'relu'
@@ -128,6 +128,7 @@ class GnT(object):
                 self.bias_corrected_util[layer_idx] = torch.rand(self.util[layer_idx].shape)
 
     def save_cur_utils(self):
+        return # do not do anything, this way of saving requires too many files... crashes on delft blue
         self.iteration_count += 1
 
         if (self.iteration_count - 1) % self.util_save_every_nth_iteration != 0:
@@ -148,7 +149,7 @@ class GnT(object):
             self.ages[i] += 1
             self.update_utility(layer_idx=i, features=features[i])
 
-        self.save_cur_utils()        
+        # self.save_cur_utils()        
 
 
     def test_features(self, features):
@@ -279,9 +280,7 @@ class GnT(object):
             sys.exit()
         features_to_replace, num_features_to_replace = self.test_features(features=features)
 
-        self.save_cur_utils()
+        # self.save_cur_utils()
 
         self.gen_new_features(features_to_replace, num_features_to_replace)
         self.update_optim_params(features_to_replace, num_features_to_replace)
-
-        # return self.util, self.bias_corrected_util

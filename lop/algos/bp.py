@@ -5,7 +5,9 @@ from torch import optim
 
 
 class Backprop(object):
-    def __init__(self, net, util_save_dir, util_save_every_nth_iteration, 
+    def __init__(self, net, 
+                #  util_save_dir, 
+                 util_save_every_nth_iteration, 
                  step_size=0.001, loss='mse', opt='sgd', beta_1=0.9, beta_2=0.999, weight_decay=0.0,
                  to_perturb=False, perturb_scale=0.1, device='cpu', momentum=0,
                  decay_rate=0.99 # default value for decay rate (as in the config files for Continual Backprop)
@@ -39,16 +41,18 @@ class Backprop(object):
             net=self.net.layers,
             hidden_activation=self.net.act_type,
             opt=self.opt,
-            util_save_dir=util_save_dir,
-            util_save_every_nth_iteration=util_save_every_nth_iteration,
+            # util_save_dir=util_save_dir,
+            # util_save_every_nth_iteration=util_save_every_nth_iteration,
             decay_rate=decay_rate,
             util_type="adaptable_contribution", # same as in the config files for Continual Backprop
             device=device,
             loss_func=self.loss_func,
         )
 
-        # self.util = []
-        # self.bias_corrected_util = []
+        self.util = []
+        self.bias_corrected_util = []
+        self.iteration_count = -1
+        self.util_save_every_nth_iteration = util_save_every_nth_iteration
 
     def copy_util_score(self, array_of_torch_tensors):
         return [x.clone() for x in array_of_torch_tensors]
@@ -60,6 +64,9 @@ class Backprop(object):
         :param target: desired output
         :return: loss
         """
+        
+        self.iteration_count += 1
+
         self.opt.zero_grad()
         output, features = self.net.predict(x=x)
         loss = self.loss_func(output, target)
@@ -72,10 +79,13 @@ class Backprop(object):
 
         if type(self.gnt) is GnT:
             self.gnt.update_utility_for_logging(features=self.previous_features)
-            # cur_util = self.gnt.util
-            # cur_bias_corrected_util = self.gnt.bias_corrected_util
-            # self.util.append(self.copy_util_score(cur_util))
-            # self.bias_corrected_util.append(self.copy_util_score(cur_bias_corrected_util))
+
+            if self.iteration_count % self.util_save_every_nth_iteration == 0:
+                # Save the utility scores
+                cur_util = self.gnt.util  
+                cur_bias_corrected_util = self.gnt.bias_corrected_util
+                self.util.append(self.copy_util_score(cur_util))
+                self.bias_corrected_util.append(self.copy_util_score(cur_bias_corrected_util))
 
         if self.loss == 'nll':
             return loss.detach(), output.detach()
