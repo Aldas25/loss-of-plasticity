@@ -21,6 +21,7 @@
   "agent": "bp",
   "num_features": 5,
   "hidden_activation": "relu",
+  "util_type": "contribution",
   "opt": "sgd",
   "step_size": [0.01, 0.003, 0.001],
   "replacement_rate": 0,
