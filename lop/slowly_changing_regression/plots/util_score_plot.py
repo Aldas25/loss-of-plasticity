@@ -21,7 +21,7 @@ def normalize_array(arr):
     # Scale to [-1, 1]
     return 2 * (arr - min_val) / (max_val - min_val) - 1
 
-def create_histogram(util_data, dir_path='plots', file_prefix='non-normalized_util_data', title='title', normalize=False):
+def create_histogram(util_data, dir_path='plots', file_prefix='non-normalized_util_data', title='title', normalize=False, divide_average_by=1):
     # Prepare data
     data = np.array(util_data) # Assuming util_data is a list of numpy arrays
     # print(f'{title}, data: {data[:20]}')
@@ -35,11 +35,14 @@ def create_histogram(util_data, dir_path='plots', file_prefix='non-normalized_ut
 
     fig, ax = plt.subplots(figsize=(10, 6))
     num_bins = 20
-    hist, bins, patches = ax.hist(data, bins=num_bins, color='skyblue', edgecolor='black', alpha=0.7)
+    weights = np.ones_like(data) / divide_average_by if divide_average_by > 1 else None
+    hist, bins, patches = ax.hist(data, bins=num_bins, color='skyblue', edgecolor='black', alpha=0.7, weights=weights)
     
     ax.grid(axis='y', alpha=0.75, linestyle='--')
     # ax.axvline(np.mean(util_data), color='red', linestyle='dashed', linewidth=2, label='Mean')
-
+    
+    if divide_average_by > 1:
+        title = f'{title} (Averaged over {divide_average_by} runs)'
     ax.set_title(title, fontsize=14)
     plt.tight_layout()
     # plt.show()
@@ -83,11 +86,17 @@ def main(arguments):
     # change the cfg file to get the results for different activation functions, ex. '../cfg/sgd/bp/tanh.json'
     parser.add_argument('-c', help="Path of the file containing the parameters of the experiment", type=str,
                             default='../cfg/sgd/bp/relu.json')
+    parser.add_argument('-iteration', help="iteration index (it will be divided by util_save_every_nth_iteration, so make it a multiple of that)", type=int,
+                            default=0)
     args = parser.parse_args(arguments)
     cfg_file = args.c
+    iteration_id = args.iteration
 
     with open(cfg_file, 'r') as f:
         params = json.load(f)
+
+    util_save_every_nth_iteration = params['util_save_every_nth_iteration']
+    iteration_id = iteration_id // util_save_every_nth_iteration
 
     plot_save_dir = params['data_dir'].replace("data", "utils_plots")
     plot_save_dir = os.path.join(os.path.pardir, plot_save_dir)
@@ -95,7 +104,7 @@ def main(arguments):
 
     m = int(params['flip_after'])*2
 
-    iteration_id = 1000 - 1  # the iteration which will have the plot saved
+    # iteration_id = 1000 - 1  # the iteration which will have the plot saved
 
     param_settings_names, param_settings = get_configurations(params=params)
     # labels = param_settings
@@ -119,8 +128,11 @@ def main(arguments):
             # print(f'Util data: {util_data[:20]}')
             # print(f'Bias corrected util data: {bias_corrected_util_data[:20]}')
 
+        true_iteration_id = iteration_id * util_save_every_nth_iteration
+        dividy_by = num_runs
+
         cur_plot_save_dir = os.path.join(
-                             plot_save_dir, f'{param_settings_names[0]}={param_settings[setting_idx][0]}', f'iteration={iteration_id}'
+                             plot_save_dir, f'{param_settings_names[0]}={param_settings[setting_idx][0]}', f'iteration={true_iteration_id}'
                              )
         os.makedirs(cur_plot_save_dir, exist_ok=True)
 
@@ -130,22 +142,26 @@ def main(arguments):
         create_histogram(util_data_all, 
                          dir_path=cur_plot_save_dir, 
                          file_prefix=f'util',
-                         title=f'Util data for {param_settings_names[0]}={param_settings[setting_idx][0]} at iteration {iteration_id}', normalize=False)
+                         title=f'Util data for {param_settings_names[0]}={param_settings[setting_idx][0]} at iteration {true_iteration_id}', normalize=False,
+                         divide_average_by=dividy_by)
         
         create_histogram(util_data_all, 
                          dir_path=cur_plot_save_dir, 
                          file_prefix=f'util_normalized',
-                         title=f'Normalized util data for {param_settings_names[0]}={param_settings[setting_idx][0]} at iteration {iteration_id}', normalize=True)
+                         title=f'Normalized util data for {param_settings_names[0]}={param_settings[setting_idx][0]} at iteration {true_iteration_id}', normalize=True,
+                         divide_average_by=dividy_by)
         
         create_histogram(bias_corrected_util_data_all, 
                          dir_path=cur_plot_save_dir, 
                          file_prefix=f'bias_corrected_util',
-                         title=f'Bias corrected util data for {param_settings_names[0]}={param_settings[setting_idx][0]} at iteration {iteration_id}', normalize=False)
+                         title=f'Bias corrected util data for {param_settings_names[0]}={param_settings[setting_idx][0]} at iteration {true_iteration_id}', normalize=False,
+                         divide_average_by=dividy_by)
         
         create_histogram(bias_corrected_util_data_all, 
                          dir_path=cur_plot_save_dir, 
                          file_prefix=f'bias_corrected_util_normalized',
-                         title=f'Normalized bias corrected util data for {param_settings_names[0]}={param_settings[setting_idx][0]} at iteration {iteration_id}', normalize=True)
+                         title=f'Normalized bias corrected util data for {param_settings_names[0]}={param_settings[setting_idx][0]} at iteration {true_iteration_id}', normalize=True,
+                         divide_average_by=dividy_by)
 
         print(f'Saved plots and data to {cur_plot_save_dir}')
            

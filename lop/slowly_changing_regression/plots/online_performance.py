@@ -40,23 +40,23 @@ def main(arguments):
     _, param_settings = get_configurations(params=params)
     labels = param_settings
     num_runs = params['num_runs']
-    indices = [i for i in range(3)]
+    indices = [i for i in range(len(param_settings))]
     for i in indices:
         performances.append(add_cfg_performance(cfg=cfg_file, setting_idx=i, m=m, num_runs=num_runs))
     # performances.append(add_cfg_performance(cfg='../cfg/' + params['opt'] + '/bp/linear.json', setting_idx=0, m=m, num_runs=num_runs))
     # labels.append('linear')
     performances = np.array(performances)
 
-    if params['hidden_activation'] in ['relu', 'swish', 'leaky_relu']:
-        yticks = [0.6, 0.8, 1., 1.2, 1.4]
-    else:
-        yticks = [0.4, 0.6, 0.8, 1, 1.2]
+    # if params['hidden_activation'] in ['relu', 'swish', 'leaky_relu']:
+    #     yticks = [0.6, 0.8, 1., 1.2, 1.4]
+    # else:
+    #     yticks = [0.4, 0.6, 0.8, 1, 1.2]
 
-    print(yticks, params['hidden_activation'])
+    # print(yticks, params['hidden_activation'])
     generate_online_performance_plot(
         performances=performances,
-        colors=['C3', 'C4', 'C5', 'C8'],
-        yticks=yticks,
+        colors=['C3', 'C4', 'C5', 'C8', 'C9'],
+        # yticks=yticks,
         xticks=[0, 500000, 1000000],
         xticks_labels=['0', '0.5M', '1M'],
         m=m,
