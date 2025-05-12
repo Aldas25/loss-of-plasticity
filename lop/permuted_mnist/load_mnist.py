@@ -2,9 +2,12 @@ import torch
 import pickle
 import torchvision
 import torchvision.transforms as transforms
+from lop.utils.set_seed import set_seed
 
 
 def mnist():
+    set_seed(1472552) # For reproducibility
+
     batch_size = 60000
     transform = transforms.Compose(
         [transforms.ToTensor()])

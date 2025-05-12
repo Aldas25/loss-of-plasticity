@@ -3,6 +3,7 @@ import json
 import torch
 import pickle
 import argparse
+import os
 import numpy as np
 from tqdm import tqdm
 from lop.algos.bp import Backprop
@@ -11,9 +12,12 @@ from lop.nets.linear import MyLinear
 from torch.nn.functional import softmax
 from lop.nets.deep_ffnn import DeepFFNN
 from lop.utils.miscellaneous import nll_accuracy, compute_matrix_rank_summaries
+from lop.utils.set_seed import set_seed
 
 
 def online_expr(params: {}):
+    set_seed(params['seed']) # For reproducibility
+
     agent_type = params['agent']
     num_tasks = 200
     if 'num_tasks' in params.keys():
@@ -85,17 +89,20 @@ def online_expr(params: {}):
         learner = Backprop(
             net=net,
             step_size=step_size,
+            util_save_every_nth_iteration=params['util_save_every_nth_iteration'],
             opt=opt,
             loss='nll',
             weight_decay=weight_decay,
             device=dev,
             to_perturb=to_perturb,
             perturb_scale=perturb_scale,
+
         )
     elif agent_type in ['cbp']:
         learner = ContinualBackprop(
             net=net,
             step_size=step_size,
+            util_save_every_nth_iteration=params['util_save_every_nth_iteration'],
             opt=opt,
             loss='nll',
             replacement_rate=replacement_rate,
@@ -188,6 +195,21 @@ def online_expr(params: {}):
         'dead_neurons': dead_neurons.cpu(),
     }
     save_data(file=params['data_file'], data=data)
+
+    # Save the util scores
+    util_save_dir = params['data_file'].replace("data", "utils_saved")
+    os.makedirs(util_save_dir, exist_ok=True)
+    util_save_dir = params['util_save_dir']
+    util_save_file = os.path.join(util_save_dir, 'util')
+    bias_corrected_util_save_file = os.path.join(util_save_dir, 'bias_corrected_util')
+    print(f'util score shape: {len(learner.util)}')
+    print(f'Saving util scores to {util_save_file}')
+    with open(util_save_file, 'wb+') as f:
+        pickle.dump(learner.util, f)
+    print(f'Bias corrected util score shape: {len(learner.bias_corrected_util)}')
+    print(f'Saving bias corrected util scores to {bias_corrected_util_save_file}')
+    with open(bias_corrected_util_save_file, 'wb+') as f:
+        pickle.dump(learner.bias_corrected_util, f)
 
 
 def save_data(file, data):

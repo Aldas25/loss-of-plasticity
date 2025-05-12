@@ -5,6 +5,7 @@ import argparse
 import subprocess
 from tqdm import tqdm
 from lop.utils.miscellaneous import get_configurations
+from lop.utils.set_seed import set_seed, get_random_int
 
 
 def main(arguments):
@@ -19,15 +20,19 @@ def main(arguments):
     with open(cfg_file, 'r') as f:
         params = json.load(f)
 
+    set_seed(params['seed'])
+
     list_params, hyper_param_settings = get_configurations(params=params)
 
+    temp_cfg_dir = params['temp_cfg_dir']
+
     # make a directory for temp cfg files
-    bash_command = "mkdir -p temp_cfg/"
+    bash_command = "mkdir -p " + temp_cfg_dir + "/"
     subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
 
     bash_command = "rm -r --force " + params['data_dir']
     subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
-    bash_command = "mkdir " + params['data_dir']
+    bash_command = "mkdir -p " + params['data_dir']
     subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
 
     """
@@ -48,11 +53,12 @@ def main(arguments):
 
         for idx in tqdm(range(params['num_runs'])):
             new_params['data_file'] = new_params['data_dir'] + str(idx)
+            new_params['seed'] = get_random_int()
 
             """
                 write data in config files
             """
-            new_cfg_file = 'temp_cfg/'+str(setting_index*params['num_runs']+idx)+'.json'
+            new_cfg_file = temp_cfg_dir + '/'+str(setting_index*params['num_runs']+idx)+'.json'
             try:    f = open(new_cfg_file, 'w+')
             except: f = open(new_cfg_file, 'w+')
             with open(new_cfg_file, 'w+') as f:

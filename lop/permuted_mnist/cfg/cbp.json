@@ -7,6 +7,9 @@
   "use_gpu": 1,
   "data_dir": "data/cbp/",
   "to_log": true,
+  "seed": 8434348,
+  "temp_cfg_dir": "cbp_temp_cfg",
+  "util_save_every_nth_iteration": 1,
 
   "_comment_2_": "Learner parameters",
   "agent": "cbp",
