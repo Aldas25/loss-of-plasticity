@@ -114,6 +114,10 @@ def expr(params: {}):
     with open(env_file, 'rb+') as f:
         inputs, outputs, _ = pickle.load(f)
 
+    dead_neurons_measure_period = 1
+    dead_neurons = torch.zeros((int(num_data_points/dead_neurons_measure_period)), dtype=torch.float)
+
+
     errs = torch.zeros((num_data_points), dtype=torch.float)
     if to_log: weight_mag = torch.zeros((num_data_points, 2), dtype=torch.float)
     if to_log_grad: grad_mag = torch.zeros((num_data_points, 2), dtype=torch.float)
@@ -134,6 +138,16 @@ def expr(params: {}):
                 activation[i] = (learner.previous_features[0].abs() > 0.9).float().mean()
         errs[i] = err
 
+        # Calculate the dead neurons
+        if i % dead_neurons_measure_period == 0:
+            if agent_type != 'linear':
+                with torch.no_grad():
+                    new_idx = int(i / dead_neurons_measure_period)
+                    m = net.predict(x[:2000])[1]
+                    dead_neurons[new_idx] = (m[0].abs().sum(dim=0) == 0).sum()
+                    # print('dead neurons: ', dead_neurons[new_idx])
+
+
     # if agent_type == 'cbp':
     # Save util scores
     util_save_file = os.path.join(util_save_dir, 'util')
@@ -148,7 +162,8 @@ def expr(params: {}):
         pickle.dump(learner.bias_corrected_util, f)
 
     data_to_save = {
-        'errs': errs.numpy()
+        'errs': errs.numpy(),
+        'dead_neurons': dead_neurons.numpy(),
     }
     if to_log:
         data_to_save['weight_mag'] = weight_mag.numpy()
