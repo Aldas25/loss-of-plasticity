@@ -114,7 +114,7 @@ def expr(params: {}):
     with open(env_file, 'rb+') as f:
         inputs, outputs, _ = pickle.load(f)
 
-    dead_neurons_measure_period = 1
+    dead_neurons_measure_period = 100
     dead_neurons = torch.zeros((int(num_data_points/dead_neurons_measure_period)), dtype=torch.float)
 
 
