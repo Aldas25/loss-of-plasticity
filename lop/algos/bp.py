@@ -10,7 +10,8 @@ class Backprop(object):
                  util_save_every_nth_iteration, 
                  step_size=0.001, loss='mse', opt='sgd', beta_1=0.9, beta_2=0.999, weight_decay=0.0,
                  to_perturb=False, perturb_scale=0.1, device='cpu', momentum=0,
-                 decay_rate=0.99 # default value for decay rate (as in the config files for Continual Backprop)
+                 decay_rate=0.99, # default value for decay rate (as in the config files for Continual Backprop)
+                 snp_shrink_rate=1,
                  ):
         self.net = net
         self.to_perturb = to_perturb
@@ -54,6 +55,8 @@ class Backprop(object):
         self.iteration_count = -1
         self.util_save_every_nth_iteration = util_save_every_nth_iteration
 
+        self.snp_shrink_rate = snp_shrink_rate
+
     def copy_util_score(self, array_of_torch_tensors):
         return [x.clone() for x in array_of_torch_tensors]
 
@@ -94,6 +97,11 @@ class Backprop(object):
     def perturb(self):
         with torch.no_grad():
             for i in range(int(len(self.net.layers)/2)+1):
+                # Addition by me: multiply by the shrink rate (as in the original Shrink and Perturb paper)
+                self.net.layers[i * 2].bias *= self.snp_shrink_rate
+                self.net.layers[i * 2].weight *= self.snp_shrink_rate
+
+                # Perturb the weights and biases (already was in the codebase)
                 self.net.layers[i * 2].bias +=\
                     torch.empty(self.net.layers[i * 2].bias.shape, device=self.device).normal_(mean=0, std=self.perturb_scale)
                 self.net.layers[i * 2].weight +=\

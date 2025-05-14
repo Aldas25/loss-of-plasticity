@@ -5,7 +5,7 @@
     "gen_prob_data": false,
     "num_runs":  10,
     "num_inputs": 20,
-    "num_data_points": 1e6,
+    "num_data_points": 3e6,
     "data_dir": "data/sgd/shrink-and-perturb/",
     "env_data_dir": "data/env_data/scr/",
     "flip_after": 10000,
@@ -27,8 +27,8 @@
     "replacement_rate": 0,
     "decay_rate": 0,
     "momentum": 0.9,
-    "weight_decay": 1e-4,
     "to_perturb": true,
-    "perturb_scale": [1e-4, 1e-5, 1e-6]
+    "perturb_scale": [1e-4, 1e-5, 1e-6],
+    "snp_shrink_rate": [0.9, 0.99, 0.999]
 
 }

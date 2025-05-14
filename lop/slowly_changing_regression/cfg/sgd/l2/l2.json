@@ -1,25 +1,31 @@
 {
-"model_version": "Generates the data",
+"model_version": "",
 
   "_comment_1_": "List of problem/experiment parameters",
-  "gen_prob_data": true,
+  "gen_prob_data": false,
   "num_runs":  10,
   "num_inputs": 20,
   "num_data_points": 3e6,
-  "data_dir": "",
+  "data_dir": "data/l2/",
   "env_data_dir": "data/env_data/scr/",
   "flip_after": 10000,
   "num_target_features": 100,
   "num_flipping_bits": 15,
-  "beta": 0.7,
-  "seed": 54631255,
+  "to_log_features": false,
+  "beta": 0.7, 
+  "seed": 64513513,
+  "temp_cfg_dir": "l2_temp_cfg",
+  "util_save_every_nth_iteration": 10,
 
   "_comment_2_": "Learner parameters",
   "agent": "bp",
   "num_features": 5,
   "hidden_activation": "relu",
+  "util_type": "contribution",
   "opt": "sgd",
-  "step_size": 0,
-  "replacement_rate": 0,
-  "decay_rate": 0
+  "step_size": 0.01,
+  "decay_rate": 0.99,
+  "weight_decay": [1e-3, 1e-4, 1e-5],
+  "maturity_threshold": 100
+
 }
