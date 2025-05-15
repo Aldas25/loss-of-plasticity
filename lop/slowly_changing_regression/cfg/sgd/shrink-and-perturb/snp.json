@@ -15,7 +15,7 @@
     "beta": 0.7,
     "seed": 48461615,
     "temp_cfg_dir": "snp_temp_cfg",
-    "util_save_every_nth_iteration": 10,
+    "util_save_every_nth_iteration": 100,
 
     "_comment_2_": "Learner parameters",
     "agent": "bp",
