@@ -4,6 +4,7 @@ import torch
 import pickle
 import argparse
 import os
+import tracemalloc
 import numpy as np
 from tqdm import tqdm
 from lop.algos.bp import Backprop
@@ -227,6 +228,8 @@ def save_data(file, data):
 
 
 def main(arguments):
+    # tracemalloc.start()
+
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -240,6 +243,19 @@ def main(arguments):
 
     online_expr(params)
 
+    # # Get memory usage and convert to MB
+    # current, peak = tracemalloc.get_traced_memory()
+    # current_mb = current / (1024 * 1024)
+    # peak_mb = peak / (1024 * 1024)
+
+    # # Print the results in MB with formatting to 2 decimal places
+    # print(f'Current memory usage: {current_mb:.2f} MB')
+    # print(f'Peak memory usage: {peak_mb:.2f} MB')
+
+    # tracemalloc.stop()
+
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv[1:]))
+
+

@@ -16,3 +16,4 @@ data/
 **/utils_saved/*
 **/wandb/*
 **/utils_plots/*
+**/logs/*
