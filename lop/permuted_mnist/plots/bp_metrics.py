@@ -50,7 +50,7 @@ def main(arguments):
     m = {'weight': 60*1000, 'accuracy': 60*1000, 'dead_neurons': 1, 'effective_rank': 1}[metric]
     num_runs = params['num_runs']
 
-    indices = [i for i in range(3)]
+    indices = [i for i in range(len(param_settings))]
     for i in indices:
         performances.append(add_cfg_performance(cfg=cfg_file, setting_idx=i, m=m, num_runs=num_runs, metric=metric))
 
@@ -59,9 +59,9 @@ def main(arguments):
     generate_online_performance_plot(
         performances=performances,
         colors=['C1', 'C3', 'C5', 'C2', 'C4', 'C6'],
-        yticks=yticks,
-        xticks=[0, 200*m, 400*m, 600*m, 800*m],
-        xticks_labels=['0', '200', '400', '600', '800'],
+        # yticks=yticks,
+        # xticks=[0, 200*m, 400*m, 600*m, 800*m],
+        # xticks_labels=['0', '200', '400', '600', '800'],
         m=m,
         fontsize=18,
         labels=param_settings,

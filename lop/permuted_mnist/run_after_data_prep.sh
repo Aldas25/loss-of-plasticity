@@ -4,7 +4,7 @@
 
 echo "Starting ..."
 
-for config_dir in "cbp_temp_cfg" "bp_temp_cfg" "snp_temp_cfg"; do
+for config_dir in "cbp_temp_cfg" "bp_temp_cfg" "snp_temp_cfg" "l2_temp_cfg"; do
     echo "Running for config files in the dir $config_dir"
 
     # Run the experiment for each configuration file

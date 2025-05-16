@@ -51,12 +51,12 @@ def main(arguments):
     num_runs = params['num_runs']
 
     bp_cfg, bp_setting_idx = '../cfg/bp/std_net.json', 1
-    adam_cfg, adam_setting_idx = '../cfg/adam.json', 0
+    # adam_cfg, adam_setting_idx = '../cfg/adam.json', 0
     l2_cfg, l2_setting_idx = '../cfg/l2.json', 1
     snp_cfg, snp_setting_idx = '../cfg/snp.json', 1
     cbp_cfg, cbp_setting_idx = '../cfg/cbp.json', 2
     performances.append(add_cfg_performance(cfg=bp_cfg, setting_idx=bp_setting_idx, m=m, num_runs=num_runs, metric=metric))
-    performances.append(add_cfg_performance(cfg=adam_cfg, setting_idx=adam_setting_idx, m=m, num_runs=num_runs, metric=metric))
+    # performances.append(add_cfg_performance(cfg=adam_cfg, setting_idx=adam_setting_idx, m=m, num_runs=num_runs, metric=metric))
     performances.append(add_cfg_performance(cfg=l2_cfg, setting_idx=l2_setting_idx, m=m, num_runs=num_runs, metric=metric))
     performances.append(add_cfg_performance(cfg=snp_cfg, setting_idx=snp_setting_idx, m=m, num_runs=num_runs, metric=metric))
     performances.append(add_cfg_performance(cfg=cbp_cfg, setting_idx=cbp_setting_idx, m=m, num_runs=num_runs, metric=metric))

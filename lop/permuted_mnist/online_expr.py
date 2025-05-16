@@ -32,7 +32,7 @@ def online_expr(params: {}):
     dev = 'cpu'
     to_log = False
     num_features = 2000
-    change_after = 10 * 6000
+    change_after = 10 * 1000
     to_perturb = False
     perturb_scale = 0.1
     num_hidden_layers = 1
@@ -73,7 +73,7 @@ def online_expr(params: {}):
         util_type = params['util_type']
 
     classes_per_task = 10
-    images_per_class = 6000
+    images_per_class = 1000
     input_size = 784
     num_hidden_layers = num_hidden_layers
     net = DeepFFNN(input_size=input_size, num_features=num_features, num_outputs=classes_per_task,
@@ -124,7 +124,7 @@ def online_expr(params: {}):
     accuracies = torch.zeros(total_iters, dtype=torch.float)
     weight_mag_sum = torch.zeros((total_iters, num_hidden_layers+1), dtype=torch.float)
 
-    rank_measure_period = 60000
+    rank_measure_period = 10000
     effective_ranks = torch.zeros((int(total_examples/rank_measure_period), num_hidden_layers), dtype=torch.float)
     approximate_ranks = torch.zeros((int(total_examples/rank_measure_period), num_hidden_layers), dtype=torch.float)
     approximate_ranks_abs = torch.zeros((int(total_examples/rank_measure_period), num_hidden_layers), dtype=torch.float)
@@ -138,12 +138,22 @@ def online_expr(params: {}):
             x = x.to(dev)
             y = y.to(dev)
 
+    sample_count = 10000 # less data points
+    change_after = min(change_after, sample_count)
+
+    data_permutation = np.random.permutation(examples_per_task)
+    x, y = x[data_permutation], y[data_permutation]
+    x = x[:sample_count]
+    y = y[:sample_count]
+
     for task_idx in (range(num_tasks)):
         new_iter_start = iter
         pixel_permutation = np.random.permutation(input_size)
         x = x[:, pixel_permutation]
         data_permutation = np.random.permutation(examples_per_task)
         x, y = x[data_permutation], y[data_permutation]
+        # x = x[:sample_count]
+        # y = y[:sample_count]
 
         if agent_type != 'linear':
             with torch.no_grad():
@@ -199,7 +209,6 @@ def online_expr(params: {}):
     # Save the util scores
     util_save_dir = params['data_file'].replace("data", "utils_saved")
     os.makedirs(util_save_dir, exist_ok=True)
-    util_save_dir = params['util_save_dir']
     util_save_file = os.path.join(util_save_dir, 'util')
     bias_corrected_util_save_file = os.path.join(util_save_dir, 'bias_corrected_util')
     print(f'util score shape: {len(learner.util)}')
