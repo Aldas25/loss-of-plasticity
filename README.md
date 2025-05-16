@@ -80,6 +80,7 @@ git clone https://github.com/shibhansh/loss-of-plasticity.git
 cd loss-of-plasticity
 pip3 install -r requirements.txt
 pip3 install -e .
+pip install -U pip setuptools   # at least for me in python3.9 gives strange warning if not updated
 ```
 
 Add this lines in your `~/.zshrc` or `~/.bashrc`
