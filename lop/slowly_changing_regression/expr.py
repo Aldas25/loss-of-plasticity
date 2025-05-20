@@ -175,7 +175,7 @@ def expr(params: {}):
 
 
 def main(arguments):
-    tracemalloc.start()
+    # tracemalloc.start()
 
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -196,16 +196,16 @@ def main(arguments):
     with open(params['data_file'], 'wb+') as f:
         pickle.dump(data, f)
 
-    # Get memory usage and convert to MB
-    current, peak = tracemalloc.get_traced_memory()
-    current_mb = current / (1024 * 1024)
-    peak_mb = peak / (1024 * 1024)
+    # # Get memory usage and convert to MB
+    # current, peak = tracemalloc.get_traced_memory()
+    # current_mb = current / (1024 * 1024)
+    # peak_mb = peak / (1024 * 1024)
 
-    # Print the results in MB with formatting to 2 decimal places
-    print(f'Current memory usage: {current_mb:.2f} MB')
-    print(f'Peak memory usage: {peak_mb:.2f} MB')
+    # # Print the results in MB with formatting to 2 decimal places
+    # print(f'Current memory usage: {current_mb:.2f} MB')
+    # print(f'Peak memory usage: {peak_mb:.2f} MB')
 
-    tracemalloc.stop()
+    # tracemalloc.stop()
 
 
 if __name__ == '__main__':
