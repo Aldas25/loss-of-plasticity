@@ -41,6 +41,12 @@ def get_configurations(params: {}):
     hyper_param_settings = list(itertools.product(*param_values))
     return list_params, hyper_param_settings
 
+def bin_m_errs_np_arr(errs, m=10000):
+    mses = []
+    for j in tqdm(range(int(errs.shape[0]/m))):
+        mses.append(errs[j*m:(j+1)*m].mean())
+    return np.array(mses)
+
 
 def bin_m_errs(errs, m=10000):
     mses = []
