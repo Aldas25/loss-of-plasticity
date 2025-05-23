@@ -3,6 +3,7 @@ import json
 import torch
 import pickle
 import argparse
+import os
 from tqdm import tqdm
 from lop.utils.set_seed import set_seed
 from lop.nets.fix_ltu_net import FixLTUNet
@@ -53,6 +54,7 @@ def generate_problem_data(
                 target_network.predict(x=X[i*mini_batch_size:(i+1)*mini_batch_size])
 
     data = X, Y, target_network
+    os.makedirs(os.path.dirname(data_file), exist_ok=True)
     with open(data_file, 'wb+') as f:
         pickle.dump(data, f)
 

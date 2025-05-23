@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# Based on the README.md file in this folder.
+
+# ALERT (you may waste your whole time if you forget this!)
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# !!!  You also need to change this number in the config (json) files that you use. !!!
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+echo "Starting the script to prepare the data."
+
+parent_dir=$(dirname "$(realpath "$0")")
+echo "Parent directory: $parent_dir"
+cd "$parent_dir" || exit 1
+
+#tmp_dir=/tmp/alenksas
+
+# Remove previous data and create new directories
+#rm -rf data utils_saved env_temp_cfg cbp_temp_cfg bp_temp_cfg
+mkdir -p env_temp_cfg l2_temp_cfg snp_temp_cfg
+
+# Create temporary configuration files in env_temp_cfg
+python3 multi_param_expr.py -c cfg/prob.json 
+
+# Create data for each run
+#for f in env_temp_cfg/*; do
+#    echo "generating outputs with f = $f"
+#    python3 slowly_changing_regression.py -c "$f"
+#done
+
+
+for c_f in "cfg/sgd/l2/l2.json" "cfg/sgd/shrink-and-perturb/snp.json"; do
+	echo "Preparing data for experiments, config file: $c_f"
+
+	# Create temporary configuration files in corresponding temp_cfg
+	python3 multi_param_expr.py -c $c_f
+done
+
+
+
+echo "Done"

@@ -28,8 +28,8 @@ def main(arguments):
 
     # generate_env_data data for all the runs
     if params['gen_prob_data']:
-        bash_command = "rm --force " + params['env_data_dir'] + '*'
-        subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
+        #bash_command = "rm --force " + params['env_data_dir'] + '*'
+        #subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
         bash_command = "mkdir -p " + params['env_data_dir']
         subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
         # make a directory for env temp cfg files
@@ -57,8 +57,8 @@ def main(arguments):
     bash_command = "mkdir -p " + temp_cfg_dir + "/"
     subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
 
-    bash_command = "rm -r --force " + params['data_dir']
-    subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
+    #bash_command = "rm -r --force " + params['data_dir']
+    #subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
     bash_command = "mkdir -p " + params['data_dir']
     subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
 
