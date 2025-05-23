@@ -99,6 +99,7 @@ def expr(params: {}):
             decay_rate=decay_rate,
             device='cpu',
             maturity_threshold=mt,
+            weight_decay=weight_decay,
             util_type=util_type,
             init=init,
             accumulate=accumulate,
