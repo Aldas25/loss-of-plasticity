@@ -51,7 +51,7 @@ class Backprop(object):
         )
 
         self.util = []
-        self.bias_corrected_util = []
+        # self.bias_corrected_util = []
         self.iteration_count = -1
         self.util_save_every_nth_iteration = util_save_every_nth_iteration
 
@@ -88,7 +88,7 @@ class Backprop(object):
                 cur_util = self.gnt.util  
                 cur_bias_corrected_util = self.gnt.bias_corrected_util
                 self.util.append(self.copy_util_score(cur_util))
-                self.bias_corrected_util.append(self.copy_util_score(cur_bias_corrected_util))
+                # self.bias_corrected_util.append(self.copy_util_score(cur_bias_corrected_util))
 
         if self.loss == 'nll':
             return loss.detach(), output.detach()

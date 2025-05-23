@@ -1,0 +1,34 @@
+{
+    "model_version": "",
+    
+    "_comment_1_": "List of problem/experiment parameters",
+    "gen_prob_data": false,
+    "num_runs":  5,
+    "num_inputs": 20,
+    "num_data_points": 3e6,
+    "data_dir": "data/sgd/cbp-snp/",
+    "env_data_dir": "data/env_data/scr/",
+    "flip_after": 10000,
+    "num_target_features": 100,
+    "num_flipping_bits": 15,
+    "to_log_features": false,
+    "beta": 0.7,
+    "seed": 48461615,
+    "temp_cfg_dir": "cbp_snp_temp_cfg",
+    "util_save_every_nth_iteration": 100,
+
+    "_comment_2_": "Learner parameters",
+    "agent": "cbp",
+    "num_features": 5,
+    "hidden_activation": "relu",
+    "util_type": "contribution",
+    "opt": "sgd",
+    "step_size": 0.01,
+    "decay_rate": 0,
+    "momentum": 0.9,
+    "to_perturb": true,
+    "replacement_rate": [1e-5, 1e-4, 1e-3],
+    "perturb_scale": [0.001, 0.01, 0.1],
+    "snp_shrink_rate": [0.4, 0.5, 0.6, 0.7, 0.8]
+
+}

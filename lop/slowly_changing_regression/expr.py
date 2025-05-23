@@ -102,6 +102,9 @@ def expr(params: {}):
             util_type=util_type,
             init=init,
             accumulate=accumulate,
+            snp_to_perturb=(perturb_scale > 0),
+            snp_perturb_scale=perturb_scale,
+            snp_shrink_rate=snp_shrink_rate
         )
 
     # wandb.init(
@@ -156,10 +159,10 @@ def expr(params: {}):
     print(f'Saving util scores to {util_save_file}')
     with open(util_save_file, 'wb+') as f:
         pickle.dump(learner.util, f)
-    print(f'Bias corrected util score shape: {len(learner.bias_corrected_util)}')
-    print(f'Saving bias corrected util scores to {bias_corrected_util_save_file}')
-    with open(bias_corrected_util_save_file, 'wb+') as f:
-        pickle.dump(learner.bias_corrected_util, f)
+    # print(f'Bias corrected util score shape: {len(learner.bias_corrected_util)}')
+    # print(f'Saving bias corrected util scores to {bias_corrected_util_save_file}')
+    # with open(bias_corrected_util_save_file, 'wb+') as f:
+    #     pickle.dump(learner.bias_corrected_util, f)
 
     data_to_save = {
         'errs': errs.numpy(),
