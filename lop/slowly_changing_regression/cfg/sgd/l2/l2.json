@@ -23,6 +23,7 @@
   "hidden_activation": "relu",
   "util_type": "contribution",
   "opt": "sgd",
+  "replacement_rate": 0,
   "step_size": 0.01,
   "decay_rate": 0.99,
   "weight_decay": [1e-3, 1e-4, 1e-5],
