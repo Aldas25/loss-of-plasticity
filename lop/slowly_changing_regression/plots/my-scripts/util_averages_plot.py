@@ -105,7 +105,7 @@ def add_cfg_performance(parent_dir, cfg, iterations_to_save, setting_idx, num_ru
 
         cur_averages = []
         for iter_id in range(len(iterations_to_save)):
-            cur_data = np.array(util_data[iter_id])
+            cur_data = np.array(util_data[iterations_to_save[iter_id]])
             if normalize:
                 cur_data = np.array([normalize_array(arr) for arr in cur_data])
             cur_data = cur_data.flatten()
@@ -115,8 +115,8 @@ def add_cfg_performance(parent_dir, cfg, iterations_to_save, setting_idx, num_ru
             # print(f'idx: {idx}, iter_id: {iter_id}, cur_data: {cur_data}, average_value: {average_value}')
             # averages[idx][iter_id] = average_value
 
-        # averages.append(bin_m_errs_np_arr(errs=np.array(cur_averages), m=100))
-        averages.append(np.array(cur_averages))
+        averages.append(bin_m_errs_np_arr(errs=np.array(cur_averages), m=5))
+        # averages.append(np.array(cur_averages))
 
         print(f' finished plotting cfg: {cfg}, setting: {setting_idx}, run: {idx}')
 
@@ -130,31 +130,44 @@ def func_take_nth_max(n):
     return nth_max
     
 def main():
-    parent_dir = "/scratch/alenksas/results/slowly_flip-one-false_5runs"
-    # cfg_file_bp = parent_dir + "/cfg/sgd/bp/relu.json" 
-    cfg_file_cbp = parent_dir + "/cfg/sgd/cbp/relu.json" 
-    print("Parent dir: ", parent_dir)
+    parent_dir1 = "/home/aldas/TUDelft/RP/results_copied/05-22_result-backup/slowly_flip-one-false_5runs"
+    parent_dir2 = "/home/aldas/TUDelft/RP/results_copied/05-23_DAIC_slowly-5runs"
+    parent_dir3 = "/home/aldas/TUDelft/RP/results_copied/05-25_DAIC_original-codebase-snp_5runs"
+    cfg_file_bp = parent_dir1 + "/cfg/sgd/bp/relu.json" 
+    cfg_file_cbp = parent_dir1 + "/cfg/sgd/cbp/relu.json" 
+    cfg_file_l2 = parent_dir2 + "/cfg/sgd/l2/l2.json"
+    cfg_file_cbp_l2 = parent_dir2 + "/cfg/sgd/cbp/cbp_with_l2.json"
+    cfg_file_snp = parent_dir3 + "/cfg/sgd/shrink-and-perturb/snp.json"
+    num_runs = 5
 
-    labels = ['CBP 1st max', 'CBP 2nd max', 'CBP 3rd max', 'CBP 4th max', 'CBP 5th max']
+    labels = ['BP mean', 'CBP mean', 'SnP mean', 'L2 mean', 'CBP+L2 mean']
     performances = []
 
-    iterations_to_save=list(range(int(5e4)+1))
+    # iterations_to_save=list(range(int(1e6), int(1e6)+int(1e5)))
+    # iterations_to_save=list(range(int(3e6)))
+    # iterations_to_save=list(range(int(1e5)))
+    iterations_to_save=list(range(int(3e6)-int(1e5), int(3e6)))
 
     performances.append(add_cfg_performance(
-        parent_dir=parent_dir, cfg=cfg_file_cbp, iterations_to_save=iterations_to_save, setting_idx=2, num_runs=5, normalize=False, func=func_take_nth_max(1)
-        ))
+        parent_dir=parent_dir1, cfg=cfg_file_bp, iterations_to_save=iterations_to_save, setting_idx=2, num_runs=num_runs, 
+        normalize=False, func=np.mean
+    ))
     performances.append(add_cfg_performance(
-        parent_dir=parent_dir, cfg=cfg_file_cbp, iterations_to_save=iterations_to_save, setting_idx=2, num_runs=5, normalize=False, func=func_take_nth_max(2)
-        ))
+        parent_dir=parent_dir1, cfg=cfg_file_cbp, iterations_to_save=iterations_to_save, setting_idx=2, num_runs=num_runs, 
+        normalize=False, func=np.mean
+    ))
     performances.append(add_cfg_performance(
-        parent_dir=parent_dir, cfg=cfg_file_cbp, iterations_to_save=iterations_to_save, setting_idx=2, num_runs=5, normalize=False, func=func_take_nth_max(3)
-        ))
+        parent_dir=parent_dir3, cfg=cfg_file_snp, iterations_to_save=iterations_to_save, setting_idx=0, num_runs=num_runs, 
+        normalize=False, func=np.mean
+    ))
     performances.append(add_cfg_performance(
-        parent_dir=parent_dir, cfg=cfg_file_cbp, iterations_to_save=iterations_to_save, setting_idx=2, num_runs=5, normalize=False, func=func_take_nth_max(4)
-        ))
+        parent_dir=parent_dir2, cfg=cfg_file_l2, iterations_to_save=iterations_to_save, setting_idx=0, num_runs=num_runs, 
+        normalize=False, func=np.mean
+    ))
     performances.append(add_cfg_performance(
-        parent_dir=parent_dir, cfg=cfg_file_cbp, iterations_to_save=iterations_to_save, setting_idx=2, num_runs=5, normalize=False, func=func_take_nth_max(5)
-        ))
+        parent_dir=parent_dir2, cfg=cfg_file_cbp_l2, iterations_to_save=iterations_to_save, setting_idx=7, num_runs=num_runs, 
+        normalize=False, func=np.mean
+    ))
 
 
     generate_online_performance_plot(
@@ -163,10 +176,12 @@ def main():
         # yticks=yticks,
         # xticks=[0, 1500000, 3000000], 
         # xticks_labels=['0', '1.5M', '3M'],
-        xticks=[0, int(1e4), int(2e4), int(3e4), int(4e4), int(5e4)],
-        xticks_labels=['0', '1e4', '2e4', '3e4', '4e4', '5e4'],
-        m=100, # equal to the util_save_every_nth_iteration
-        labels=labels
+        xticks=[0, int(5e4), int(1e5)],
+        xticks_labels=['3e6-1e5', '3e6-5e4', '3e6'],
+        m=100 * 5, # equal to the util_save_every_nth_iteration
+        labels=labels,
+        fontsize=16,
+        filename_pref='various_algo_util_mean_last1e5'
     )
 
            

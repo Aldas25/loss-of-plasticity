@@ -19,6 +19,7 @@ def generate_online_performance_plot(
         log_scale_x=False,
         log_scale_y=False,
         svg=False,
+        filename_pref='comparison'
 ):
 
     """
@@ -40,7 +41,7 @@ def generate_online_performance_plot(
             label = labels[index_hyper_param_label]
         color = colors[index_hyper_param_label]
         plt.plot(x*m, mean, '-', label=label, color=color)
-        plt.fill_between(x*m, mean - std_err, mean + std_err, color=color, alpha=0.2)
+        plt.fill_between(x*m, mean - std_err, mean + std_err, color=color, alpha=0.1)
 
     # h.set_rotation(0)
     ax.spines['top'].set_visible(False)
@@ -71,7 +72,7 @@ def generate_online_performance_plot(
     if caption is not None:
         ax.set_title(caption)
     if svg:
-        plt.savefig('comparison.svg', bbox_inches='tight', dpi=500)
+        plt.savefig(f'{filename_pref}.svg', bbox_inches='tight', dpi=500)
     else:
-        plt.savefig('comparison.png', bbox_inches='tight', dpi=500)
+        plt.savefig(f'{filename_pref}.png', bbox_inches='tight', dpi=500)
     plt.close()
