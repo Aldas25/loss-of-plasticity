@@ -17,7 +17,7 @@ cd "$parent_dir" || exit 1
 
 # Remove previous data and create new directories
 #rm -rf data utils_saved env_temp_cfg cbp_temp_cfg bp_temp_cfg
-mkdir -p env_temp_cfg l2_temp_cfg snp_temp_cfg
+mkdir -p env_temp_cfg cbp_l2_temp_cfg cbp_snp_temp_cfg
 
 # Create temporary configuration files in env_temp_cfg
 python3 multi_param_expr.py -c cfg/prob.json 
@@ -29,7 +29,7 @@ python3 multi_param_expr.py -c cfg/prob.json
 #done
 
 
-for c_f in "cfg/sgd/l2/l2.json" "cfg/sgd/shrink-and-perturb/snp.json"; do
+for c_f in "cfg/sgd/shrink-and-perturb/cbp_snp.json" "cfg/sgd/cbp/cbp_with_l2.json"; do
 	echo "Preparing data for experiments, config file: $c_f"
 
 	# Create temporary configuration files in corresponding temp_cfg

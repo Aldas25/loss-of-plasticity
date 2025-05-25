@@ -7,7 +7,7 @@
     "num_inputs": 20,
     "num_data_points": 3e6,
     "data_dir": "data/sgd/shrink-and-perturb/",
-    "env_data_dir": "data/env_data/scr/",
+    "env_data_dir": "/tmp/alenksas/data/env_data/scr/",
     "flip_after": 10000,
     "num_target_features": 100,
     "num_flipping_bits": 15,

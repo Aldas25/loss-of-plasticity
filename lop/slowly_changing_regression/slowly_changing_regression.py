@@ -55,6 +55,9 @@ def generate_problem_data(
 
     data = X, Y, target_network
     os.makedirs(os.path.dirname(data_file), exist_ok=True)
+    if os.path.exists(data_file):
+    	return
+    
     with open(data_file, 'wb+') as f:
         pickle.dump(data, f)
 
