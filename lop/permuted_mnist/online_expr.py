@@ -6,7 +6,6 @@ import argparse
 import os
 import tracemalloc
 import numpy as np
-from tqdm import tqdm
 from lop.algos.bp import Backprop
 from lop.algos.cbp import ContinualBackprop
 from lop.nets.linear import MyLinear
@@ -126,10 +125,10 @@ def online_expr(params: {}):
     weight_mag_sum = torch.zeros((total_iters, num_hidden_layers+1), dtype=torch.float)
 
     rank_measure_period = 10000
-    effective_ranks = torch.zeros((int(total_examples/rank_measure_period), num_hidden_layers), dtype=torch.float)
-    approximate_ranks = torch.zeros((int(total_examples/rank_measure_period), num_hidden_layers), dtype=torch.float)
-    approximate_ranks_abs = torch.zeros((int(total_examples/rank_measure_period), num_hidden_layers), dtype=torch.float)
-    ranks = torch.zeros((int(total_examples/rank_measure_period), num_hidden_layers), dtype=torch.float)
+    # effective_ranks = torch.zeros((int(total_examples/rank_measure_period), num_hidden_layers), dtype=torch.float)
+    # approximate_ranks = torch.zeros((int(total_examples/rank_measure_period), num_hidden_layers), dtype=torch.float)
+    # approximate_ranks_abs = torch.zeros((int(total_examples/rank_measure_period), num_hidden_layers), dtype=torch.float)
+    # ranks = torch.zeros((int(total_examples/rank_measure_period), num_hidden_layers), dtype=torch.float)
     dead_neurons = torch.zeros((int(total_examples/rank_measure_period), num_hidden_layers), dtype=torch.float)
 
     iter = 0
@@ -161,13 +160,14 @@ def online_expr(params: {}):
                 new_idx = int(iter / rank_measure_period)
                 m = net.predict(x[:2000])[1]
                 for rep_layer_idx in range(num_hidden_layers):
-                    ranks[new_idx][rep_layer_idx], effective_ranks[new_idx][rep_layer_idx], \
-                    approximate_ranks[new_idx][rep_layer_idx], approximate_ranks_abs[new_idx][rep_layer_idx] = \
-                        compute_matrix_rank_summaries(m=m[rep_layer_idx], use_scipy=True)
+                    # ranks[new_idx][rep_layer_idx], effective_ranks[new_idx][rep_layer_idx], \
+                    # approximate_ranks[new_idx][rep_layer_idx], approximate_ranks_abs[new_idx][rep_layer_idx] = \
+                    #     compute_matrix_rank_summaries(m=m[rep_layer_idx], use_scipy=True)
                     dead_neurons[new_idx][rep_layer_idx] = (m[rep_layer_idx].abs().sum(dim=0) == 0).sum()
-                print('approximate rank: ', approximate_ranks[new_idx], ', dead neurons: ', dead_neurons[new_idx])
+                # print('approximate rank: ', approximate_ranks[new_idx], ', dead neurons: ', dead_neurons[new_idx])
 
-        for start_idx in tqdm(range(0, change_after, mini_batch_size)):
+        # for start_idx in tqdm(range(0, change_after, mini_batch_size)):
+        for start_idx in range(0, change_after, mini_batch_size):
             start_idx = start_idx % examples_per_task
             batch_x = x[start_idx: start_idx+mini_batch_size]
             batch_y = y[start_idx: start_idx+mini_batch_size]
@@ -183,15 +183,15 @@ def online_expr(params: {}):
                 accuracies[iter] = accuracy(softmax(network_output, dim=1), batch_y).cpu()
             iter += 1
 
-        print('recent accuracy', accuracies[new_iter_start:iter - 1].mean())
+        # print('recent accuracy', accuracies[new_iter_start:iter - 1].mean())
         if task_idx % save_after_every_n_tasks == 0:
             data = {
                 'accuracies': accuracies.cpu(),
                 'weight_mag_sum': weight_mag_sum.cpu(),
-                'ranks': ranks.cpu(),
-                'effective_ranks': effective_ranks.cpu(),
-                'approximate_ranks': approximate_ranks.cpu(),
-                'abs_approximate_ranks': approximate_ranks_abs.cpu(),
+                # 'ranks': ranks.cpu(),
+                # 'effective_ranks': effective_ranks.cpu(),
+                # 'approximate_ranks': approximate_ranks.cpu(),
+                # 'abs_approximate_ranks': approximate_ranks_abs.cpu(),
                 'dead_neurons': dead_neurons.cpu(),
             }
             save_data(file=params['data_file'], data=data)
@@ -199,27 +199,23 @@ def online_expr(params: {}):
     data = {
         'accuracies': accuracies.cpu(),
         'weight_mag_sum': weight_mag_sum.cpu(),
-        'ranks': ranks.cpu(),
-        'effective_ranks': effective_ranks.cpu(),
-        'approximate_ranks': approximate_ranks.cpu(),
-        'abs_approximate_ranks': approximate_ranks_abs.cpu(),
+        # 'ranks': ranks.cpu(),
+        # 'effective_ranks': effective_ranks.cpu(),
+        # 'approximate_ranks': approximate_ranks.cpu(),
+        # 'abs_approximate_ranks': approximate_ranks_abs.cpu(),
         'dead_neurons': dead_neurons.cpu(),
     }
     save_data(file=params['data_file'], data=data)
 
     # Save the util scores
-    util_save_dir = params['data_file'].replace("data", "utils_saved")
-    os.makedirs(util_save_dir, exist_ok=True)
-    util_save_file = os.path.join(util_save_dir, 'util')
-    bias_corrected_util_save_file = os.path.join(util_save_dir, 'bias_corrected_util')
-    print(f'util score shape: {len(learner.util)}')
-    print(f'Saving util scores to {util_save_file}')
-    with open(util_save_file, 'wb+') as f:
-        pickle.dump(learner.util, f)
-    print(f'Bias corrected util score shape: {len(learner.bias_corrected_util)}')
-    print(f'Saving bias corrected util scores to {bias_corrected_util_save_file}')
-    with open(bias_corrected_util_save_file, 'wb+') as f:
-        pickle.dump(learner.bias_corrected_util, f)
+    # util_save_dir = params['data_file'].replace("data", "utils_saved")
+    # os.makedirs(util_save_dir, exist_ok=True)
+    # util_save_file = os.path.join(util_save_dir, 'util')
+    # bias_corrected_util_save_file = os.path.join(util_save_dir, 'bias_corrected_util')
+    # print(f'util score shape: {len(learner.util)}')
+    # print(f'Saving util scores to {util_save_file}')
+    # with open(util_save_file, 'wb+') as f:
+    #     pickle.dump(learner.util, f)
 
 
 def save_data(file, data):
