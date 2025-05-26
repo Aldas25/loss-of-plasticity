@@ -3,6 +3,7 @@
 echo "Starting ..."
 
 cd /home/aldas/loss-of-plasticity/lop/permuted_mnist || exit 1
+conda activate lop
 
 cfg_dir=$1
 index_from=$2
