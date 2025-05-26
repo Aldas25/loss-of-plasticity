@@ -105,7 +105,7 @@ def sort_and_remove_duplicates(arr):
 def main():
     # parent_dir = "/home/aldas/TUDelft/RP/results_copied/05-25_DAIC_original-codebase-snp_5runs"
     parent_dir = "/home/aldas/TUDelft/RP/results_copied/05-25_DAIC_original-codebase-snp_5runs"
-    cfg_file = parent_dir + "/cfg/sgd/shrink-and-perturb/snp.json"
+    cfg_file = parent_dir + "/cfg/sgd/shrink-and-perturb/cbp_snp.json"
     iterations_to_save = [int(3e6 - 1)]  # very last one
     iterations_to_save.extend([int(i * 1e5)+int(1e4)-1 for i in range(29)])  # some last iterations of each task
     iterations_to_save.extend([int(3e6-1e4 + i*1e3) for i in range(10)]) # check how changes in the last task

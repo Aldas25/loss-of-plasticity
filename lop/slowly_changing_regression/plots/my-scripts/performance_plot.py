@@ -43,24 +43,15 @@ def main(arguments):
     # args = parser.parse_args(arguments)
     # cfg_file = args.c
 
-    parent_dir = "/home/aldas/TUDelft/RP/results_copied/05-25_DAIC_original-codebase-snp_5runs"
-    # parent_dir = "/home/aldas/TUDelft/RP/results_copied/05-23_DAIC_slowly-5runs"
-    
-    # cbp_snp_suf = "/cfg/sgd/shrink-and-perturb/cbp_snp.json"
-    # cbp_l2_suf = "/cfg/sgd/cbp/cbp_with_l2.json"
-    # snp_suf = "/cfg/sgd/shrink-and-perturb/snp.json"
-    cbp_snp_suf = "/cfg/sgd/shrink-and-perturb/cbp_snp.json"
-    # l2_suf = "/cfg/sgd/l2/l2.json"
-    # cbp_suf = "/cfg/sgd/cbp/relu.json" 
-    # bp_suf = "/cfg/sgd/bp/relu.json"
-
-    # cfg_file_cbp_snp = parent_dir + cbp_snp_suf
-    # cfg_file_cbp_l2 = parent_dir + cbp_l2_suf
-    cfg_file_cbp_snp = parent_dir + cbp_snp_suf
-    # cfg_file_snp = parent_dir + snp_suf
-    # cfg_file_l2 = parent_dir + l2_suf
-    # cfg_file_cbp = parent_dir + cbp_suf
-    # cfg_file_bp = parent_dir + bp_suf
+    parent_dir1 = "/home/aldas/TUDelft/RP/results_copied/05-22_result-backup/slowly_flip-one-false_5runs"
+    parent_dir2 = "/home/aldas/TUDelft/RP/results_copied/05-23_DAIC_slowly-5runs"
+    parent_dir3 = "/home/aldas/TUDelft/RP/results_copied/05-25_DAIC_original-codebase-snp_5runs"
+    cfg_file_bp = parent_dir1 + "/cfg/sgd/bp/relu.json" 
+    cfg_file_cbp = parent_dir1 + "/cfg/sgd/cbp/relu.json" 
+    cfg_file_l2 = parent_dir2 + "/cfg/sgd/l2/l2.json"
+    cfg_file_cbp_l2 = parent_dir2 + "/cfg/sgd/cbp/cbp_with_l2.json"
+    cfg_file_snp = parent_dir3 + "/cfg/sgd/shrink-and-perturb/snp.json"
+    cfg_file_cbp_snp = parent_dir3 + "/cfg/sgd/shrink-and-perturb/cbp_snp.json"
 
     with open(cfg_file_cbp_snp, 'r') as f:
         params = json.load(f)
@@ -69,18 +60,25 @@ def main(arguments):
     m = int(params['flip_after'])*5*3
 
     _, param_settings = get_configurations(params=params)
-    # selected_indeces = [0, 1]
+    # selected_indeces = [4, 10, 18]
     # labels = [param_settings[ind] for ind in selected_indeces]
     # print(f'len of params: {len(param_settings)}')
-    labels = param_settings
+    # labels = param_settings
     # labels = ['Continual BP', 'Backprop']
     # num_runs = params['num_runs']
     num_runs = 5
-    # performances.append(add_cfg_performance(parent_dir=parent_dir, cfg=cfg_file_cbp, setting_idx=2, m=m, num_runs=num_runs))
-    # performances.append(add_cfg_performance(parent_dir=parent_dir, cfg=cfg_file_bp, setting_idx=2, m=m, num_runs=num_runs))
+    
+    labels=['BP', 'CBP', 'SnP', 'L2', 'CBP+SnP', 'CBP+L2']
+    performances.append(add_cfg_performance(parent_dir=parent_dir1, cfg=cfg_file_bp, setting_idx=2, m=m, num_runs=num_runs))
+    performances.append(add_cfg_performance(parent_dir=parent_dir1, cfg=cfg_file_cbp, setting_idx=2, m=m, num_runs=num_runs))
+    performances.append(add_cfg_performance(parent_dir=parent_dir3, cfg=cfg_file_snp, setting_idx=0, m=m, num_runs=num_runs))
+    performances.append(add_cfg_performance(parent_dir=parent_dir2, cfg=cfg_file_l2, setting_idx=0, m=m, num_runs=num_runs))
+    performances.append(add_cfg_performance(parent_dir=parent_dir3, cfg=cfg_file_cbp_snp, setting_idx=10, m=m, num_runs=num_runs))
+    performances.append(add_cfg_performance(parent_dir=parent_dir2, cfg=cfg_file_cbp_l2, setting_idx=7, m=m, num_runs=num_runs))
+    
     # for i in selected_indeces:
-    for i in range(len(param_settings)):
-        performances.append(add_cfg_performance(parent_dir=parent_dir, cfg=cfg_file_cbp_snp, setting_idx=i, m=m, num_runs=num_runs))
+    # for i in range(len(param_settings)):
+    #     performances.append(add_cfg_performance(parent_dir=parent_dir, cfg=cfg_file_cbp_snp, setting_idx=i, m=m, num_runs=num_runs))
     # performances.append(add_cfg_performance(cfg='../cfg/' + params['opt'] + '/bp/linear.json', setting_idx=0, m=m, num_runs=num_runs))
     # labels.append('linear')
     performances = np.array(performances)
@@ -103,7 +101,7 @@ def main(arguments):
         m=m,  # divided by dead neuron measure period
         labels=labels,
         fontsize=18,
-        filename_pref='cbp_snp_performance'
+        filename_pref='asdasd'
     )
 
 
