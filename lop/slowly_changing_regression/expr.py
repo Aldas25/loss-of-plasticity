@@ -23,7 +23,7 @@ def expr(params: {}):
     weight_decay = 0.0
     accumulate = False
     perturb_scale = 0
-    snp_shrink_rate = 1
+    #snp_shrink_rate = 1
     if 'to_log' in params.keys():
         to_log = params['to_log']
     if 'to_log_grad' in params.keys():
@@ -40,8 +40,8 @@ def expr(params: {}):
         accumulate = params['accumulate']
     if 'perturb_scale' in params.keys():
         perturb_scale = params['perturb_scale']
-    if 'snp_shrink_rate' in params.keys():
-        snp_shrink_rate = params['snp_shrink_rate']
+    #if 'snp_shrink_rate' in params.keys():
+    #    snp_shrink_rate = params['snp_shrink_rate']
 
     num_inputs = params['num_inputs']
     num_features = params['num_features']
@@ -86,7 +86,7 @@ def expr(params: {}):
             weight_decay=weight_decay,
             to_perturb=(perturb_scale > 0),
             perturb_scale=perturb_scale,
-            snp_shrink_rate=snp_shrink_rate,
+            #snp_shrink_rate=snp_shrink_rate,
         )
     elif agent_type == 'cbp':
         learner = ContinualBackprop(
@@ -105,7 +105,7 @@ def expr(params: {}):
             accumulate=accumulate,
             snp_to_perturb=(perturb_scale > 0),
             snp_perturb_scale=perturb_scale,
-            snp_shrink_rate=snp_shrink_rate
+            #snp_shrink_rate=snp_shrink_rate
         )
 
     # wandb.init(

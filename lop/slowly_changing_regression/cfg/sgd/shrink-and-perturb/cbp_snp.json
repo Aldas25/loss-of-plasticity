@@ -29,10 +29,6 @@
     "maturity_threshold": 100,
     "to_perturb": true,
     "replacement_rate": [1e-5, 1e-4, 1e-3],
-    "perturb_scale": [0.001, 0.01, 0.1],
-    "snp_shrink_rate": [0.4, 0.5, 0.6, 0.7, 0.8]
-    
-     
-  
-
+    "weight_decay": [1e-3, 1e-4, 1e-5],
+    "perturb_scale": [1e-4, 1e-5, 1e-6]
 }
