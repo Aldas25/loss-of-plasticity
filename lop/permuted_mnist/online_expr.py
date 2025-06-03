@@ -15,7 +15,7 @@ from lop.utils.miscellaneous import nll_accuracy, compute_matrix_rank_summaries
 from lop.utils.set_seed import set_seed
 
 
-def online_expr(params: {}):
+def online_expr(run_id, params: {}):
     set_seed(params['seed']) # For reproducibility
 
     agent_type = params['agent']
@@ -132,7 +132,9 @@ def online_expr(params: {}):
     dead_neurons = torch.zeros((int(total_examples/rank_measure_period), num_hidden_layers), dtype=torch.float)
 
     iter = 0
-    with open('data/mnist_', 'rb+') as f:
+    mnist_data_file = f'/tmp/alenksas/data/{run_id}/mnist_'
+    print(f'script online_expr. reading from data file: {mnist_data_file}')
+    with open(mnist_data_file, 'rb+') as f:
         x, y, _, _ = pickle.load(f)
         if use_gpu == 1:
             x = x.to(dev)
@@ -147,6 +149,7 @@ def online_expr(params: {}):
     y = y[:sample_count]
 
     for task_idx in (range(num_tasks)):
+        print(f'started task task_idx={task_idx}')
         new_iter_start = iter
         pixel_permutation = np.random.permutation(input_size)
         x = x[:, pixel_permutation]
@@ -206,19 +209,20 @@ def online_expr(params: {}):
         'dead_neurons': dead_neurons.cpu(),
     }
     save_data(file=params['data_file'], data=data)
+    print(f'saved data to {params["data_file"]}')
 
     # Save the util scores
-    # util_save_dir = params['data_file'].replace("data", "utils_saved")
-    # os.makedirs(util_save_dir, exist_ok=True)
-    # util_save_file = os.path.join(util_save_dir, 'util')
-    # bias_corrected_util_save_file = os.path.join(util_save_dir, 'bias_corrected_util')
-    # print(f'util score shape: {len(learner.util)}')
-    # print(f'Saving util scores to {util_save_file}')
-    # with open(util_save_file, 'wb+') as f:
-    #     pickle.dump(learner.util, f)
+    util_save_dir = params['data_file'].replace("data", "utils_saved")
+    os.makedirs(util_save_dir, exist_ok=True)
+    util_save_file = os.path.join(util_save_dir, 'util')
+    print(f'util score shape: {len(learner.util)}')
+    print(f'Saving util scores to {util_save_file}')
+    with open(util_save_file, 'wb+') as f:
+        pickle.dump(learner.util, f)
 
 
 def save_data(file, data):
+    os.makedirs(os.path.dirname(file), exist_ok=True)
     with open(file, 'wb+') as f:
         pickle.dump(data, f)
 
@@ -226,18 +230,20 @@ def save_data(file, data):
 def main(arguments):
     # tracemalloc.start()
 
+    run_id = arguments[0]
+    #print(f'run id: {run_id}, rest of args: {arguments[1:]}')
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-c', help="Path to the file containing the parameters for the experiment",
                         type=str, default='temp_cfg/0.json')
-    args = parser.parse_args(arguments)
+    args = parser.parse_args(arguments[1:])
     cfg_file = args.c
 
     with open(cfg_file, 'r') as f:
         params = json.load(f)
 
-    online_expr(params)
+    online_expr(run_id, params)
 
     # # Get memory usage and convert to MB
     # current, peak = tracemalloc.get_traced_memory()

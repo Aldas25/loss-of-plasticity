@@ -5,10 +5,10 @@
   "num_runs":  5,
   "num_tasks": 400,
   "use_gpu": 1,
-  "data_dir": "data/cbp/",
+  "data_dir": "data/cbp_l2/",
   "to_log": true,
   "seed": 8434348,
-  "temp_cfg_dir": "cbp_temp_cfg",
+  "temp_cfg_dir": "cbp_l2_temp_cfg",
   "util_save_every_nth_iteration": 100,
 
   "_comment_2_": "Learner parameters",
@@ -21,5 +21,6 @@
   "util_type": "contribution",
   "replacement_rate": [1e-4, 1e-5, 1e-6],
   "decay_rate": 0.99,
+  "weight_decay": [1e-3, 1e-4, 1e-5],
   "mt": 100
 }

@@ -1,22 +1,37 @@
 import torch
 import pickle
 import torchvision
+import os
+import sys
+import shutil
 import torchvision.transforms as transforms
 from lop.utils.set_seed import set_seed
 
 
-def mnist():
+def mnist(run_id):
     set_seed(1472552) # For reproducibility
+    
+    root_data_folder = f'/tmp/alenksas/data/{run_id}'
+    data_file = root_data_folder + '/mnist_'
+    print(f'script load_mnist. root_dat: {root_data_folder}, data f: {data_file}')
+    
+    if os.path.exists(root_data_folder):
+    	print(f'found folder/file in root data folder, will be deleted.')
+    	shutil.rmtree(root_data_folder)
+    
+    #quit(0)
+    #if os.path.exists(data_file):
+    #	return
 
     batch_size = 60000
     transform = transforms.Compose(
         [transforms.ToTensor()])
 
     train_dataset = torchvision.datasets.MNIST(
-        root="data", train=True, transform=transform, download=True
+        root=root_data_folder, train=True, transform=transform, download=True
     )
     test_dataset = torchvision.datasets.MNIST(
-        root="data", train=False, transform=transform
+        root=root_data_folder, train=False, transform=transform
     )
     # Data loader
     train_loader = torch.utils.data.DataLoader(
@@ -40,22 +55,27 @@ def mnist():
     x_test = images_test
     y_test = labels_test
 
-    with open('data/mnist_', 'wb+') as f:
+
+    os.makedirs(os.path.dirname(data_file), exist_ok=True)
+    #if os.path.exists(data_file):
+    #	return
+    with open(data_file, 'wb+') as f:
         pickle.dump([x, y, x_test, y_test], f)
 
     return x, y, x_test, y_test
 
 
-def get_mnist(type='reg'):
-    if type == 'reg':
-        data_file = 'data/mnist_'
-        with open(data_file, 'rb+') as f:
-            x, y, x_test, y_test = pickle.load(f)
-    return x, y, x_test, y_test
+#def get_mnist(type='reg'):
+#    if type == 'reg':
+#        data_file = '/tmp/alenksas/data/mnist_'
+#        with open(data_file, 'rb+') as f:
+#            x, y, x_test, y_test = pickle.load(f)
+#    return x, y, x_test, y_test
 
 
 if __name__ == '__main__':
     """
     Generates all the required data
     """
-    mnist()
+    run_id = sys.argv[1]
+    mnist(run_id)

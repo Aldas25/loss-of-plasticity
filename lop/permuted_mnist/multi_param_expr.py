@@ -3,6 +3,7 @@ import json
 import copy
 import argparse
 import subprocess
+from tqdm import tqdm
 from lop.utils.miscellaneous import get_configurations
 from lop.utils.set_seed import set_seed, get_random_int
 
@@ -29,8 +30,8 @@ def main(arguments):
     bash_command = "mkdir -p " + temp_cfg_dir + "/"
     subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
 
-    bash_command = "rm -r --force " + params['data_dir']
-    subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
+    #bash_command = "rm -r --force " + params['data_dir']
+    #subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
     bash_command = "mkdir -p " + params['data_dir']
     subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
 
@@ -50,8 +51,7 @@ def main(arguments):
         bash_command = "mkdir -p " + new_params['data_dir']
         subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
 
-        # for idx in tqdm(range(params['num_runs'])):
-        for idx in range(params['num_runs']):
+        for idx in tqdm(range(params['num_runs'])):
             new_params['data_file'] = new_params['data_dir'] + str(idx)
             new_params['seed'] = get_random_int()
 

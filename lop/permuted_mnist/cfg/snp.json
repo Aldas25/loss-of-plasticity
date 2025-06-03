@@ -3,7 +3,7 @@
 
   "_comment_1_": "List of problem/experiment parameters",
   "num_runs":  5,
-  "num_tasks": 800,
+  "num_tasks": 400,
   "use_gpu": 1,
   "data_dir": "data/snp/",
   "to_log": true,
@@ -19,5 +19,6 @@
   "step_size": 0.003,
   "weight_decay": 1e-4,
   "to_perturb": true,
+  "weight_decay": [1e-3, 1e-4, 1e-5],
   "perturb_scale": [1e-4, 1e-5, 1e-6]
 }
