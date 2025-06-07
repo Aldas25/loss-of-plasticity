@@ -8,10 +8,10 @@ import torchvision.transforms as transforms
 from lop.utils.set_seed import set_seed
 
 
-def mnist(run_id):
+def mnist():
     set_seed(1472552) # For reproducibility
     
-    root_data_folder = f'/tmp/alenksas/data/{run_id}'
+    root_data_folder = f'data'
     data_file = root_data_folder + '/mnist_'
     print(f'script load_mnist. root_dat: {root_data_folder}, data f: {data_file}')
     
@@ -77,5 +77,5 @@ if __name__ == '__main__':
     """
     Generates all the required data
     """
-    run_id = sys.argv[1]
-    mnist(run_id)
+    # run_id = sys.argv[1]
+    mnist()
