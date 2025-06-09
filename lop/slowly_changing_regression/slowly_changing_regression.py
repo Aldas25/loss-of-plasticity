@@ -53,22 +53,28 @@ def generate_problem_data(
             Y[i*mini_batch_size:(i+1)*mini_batch_size], features =\
                 target_network.predict(x=X[i*mini_batch_size:(i+1)*mini_batch_size])
 
+    par_dir = os.path.dirname(data_file)
+    if os.path.exists(par_dir) and os.path.isfile(par_dir):
+    	os.remove(par_dir)
+
     data = X, Y, target_network
     os.makedirs(os.path.dirname(data_file), exist_ok=True)
-    if os.path.exists(data_file):
-    	return
+    #if os.path.exists(data_file):
+    #	return
     
     with open(data_file, 'wb+') as f:
         pickle.dump(data, f)
 
 
 def main(arguments):
+    run_id = arguments[0]
+
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-c', help="Path of the file containing the parameters of the experiment",
                         type=str, default='env_temp_cfg/0.json')
-    args = parser.parse_args(arguments)
+    args = parser.parse_args(arguments[1:])
     cfg_file = args.c
 
     with open(cfg_file, 'r') as f:
@@ -86,7 +92,7 @@ def main(arguments):
         params['flip_one'] = False
 
     generate_problem_data(
-        data_file=params['env_file'],
+        data_file=f"{params['env_file']}/{run_id}",
         num_data_points=int(params['num_data_points']),
         flip_after=int(params['flip_after']),
         num_inputs=params['num_inputs'],

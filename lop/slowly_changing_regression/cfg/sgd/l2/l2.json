@@ -3,7 +3,7 @@
 
   "_comment_1_": "List of problem/experiment parameters",
   "gen_prob_data": false,
-  "num_runs":  5,
+  "num_runs":  100,
   "num_inputs": 20,
   "num_data_points": 3e6,
   "data_dir": "data/l2/",
@@ -26,7 +26,7 @@
   "replacement_rate": 0,
   "step_size": 0.01,
   "decay_rate": 0.99,
-  "weight_decay": [1e-3, 1e-4, 1e-5],
+  "weight_decay": 1e-2,
   "maturity_threshold": 100
 
 }

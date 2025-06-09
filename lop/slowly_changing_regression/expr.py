@@ -11,7 +11,7 @@ from lop.algos.cbp import ContinualBackprop
 from lop.utils.miscellaneous import *
 import tracemalloc
 
-def expr(params: {}):
+def expr(run_id, params: {}):
     agent_type = params['agent']
     env_file = params['env_file']
     num_data_points = int(params['num_data_points'])
@@ -115,18 +115,20 @@ def expr(params: {}):
     #     group=params['wandb_group'],
     # )
 
-    with open(env_file, 'rb+') as f:
+    with open(f'{env_file}/{run_id}', 'rb+') as f:
         inputs, outputs, _ = pickle.load(f)
 
-    dead_neurons_measure_period = 100
+    dead_neurons_measure_period = 1
     dead_neurons = torch.zeros((int(num_data_points/dead_neurons_measure_period)), dtype=torch.float)
+    weight_mag_sum = torch.zeros((num_data_points, 2), dtype=torch.float)
 
 
     errs = torch.zeros((num_data_points), dtype=torch.float)
     if to_log: weight_mag = torch.zeros((num_data_points, 2), dtype=torch.float)
     if to_log_grad: grad_mag = torch.zeros((num_data_points, 2), dtype=torch.float)
     if to_log_activation: activation = torch.zeros((num_data_points, ), dtype=torch.float)
-    for i in tqdm(range(num_data_points)):
+    #for i in tqdm(range(num_data_points)):
+    for i in range(num_data_points):
         x, y = inputs[i: i+1], outputs[i: i+1]
         err = learner.learn(x=x, target=y)
         if to_log:
@@ -142,6 +144,10 @@ def expr(params: {}):
                 activation[i] = (learner.previous_features[0].abs() > 0.9).float().mean()
         errs[i] = err
 
+        #for idx, layer_idx in enumerate(learner.net.layers_to_log):
+        weight_mag_sum[i][0] = learner.net.layers[0].weight.data.abs().sum()
+        weight_mag_sum[i][1] = learner.net.layers[-1].weight.data.abs().sum()
+
         # Calculate the dead neurons
         if i % dead_neurons_measure_period == 0:
             if agent_type != 'linear':
@@ -152,22 +158,17 @@ def expr(params: {}):
                     # print('dead neurons: ', dead_neurons[new_idx])
 
 
-    # if agent_type == 'cbp':
     # Save util scores
     util_save_file = os.path.join(util_save_dir, 'util')
-    bias_corrected_util_save_file = os.path.join(util_save_dir, 'bias_corrected_util')
     print(f'util score shape: {len(learner.util)}')
     print(f'Saving util scores to {util_save_file}')
     with open(util_save_file, 'wb+') as f:
         pickle.dump(learner.util, f)
-    # print(f'Bias corrected util score shape: {len(learner.bias_corrected_util)}')
-    # print(f'Saving bias corrected util scores to {bias_corrected_util_save_file}')
-    # with open(bias_corrected_util_save_file, 'wb+') as f:
-    #     pickle.dump(learner.bias_corrected_util, f)
 
     data_to_save = {
         'errs': errs.numpy(),
         'dead_neurons': dead_neurons.numpy(),
+        'weight': weight_mag_sum.numpy(),
     }
     if to_log:
         data_to_save['weight_mag'] = weight_mag.numpy()
@@ -180,13 +181,15 @@ def expr(params: {}):
 
 def main(arguments):
     # tracemalloc.start()
+    
+    run_id = arguments[0]
 
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-c', help="Path to the file containing the parameters for the experiment",
                         type=str, default='temp_cfg/0.json')
-    args = parser.parse_args(arguments)
+    args = parser.parse_args(arguments[1:])
     cfg_file = args.c
 
     with open(cfg_file, 'r') as f:
@@ -194,7 +197,7 @@ def main(arguments):
 
     set_seed(params['seed'])
 
-    data = expr(params)
+    data = expr(run_id, params)
 
     os.makedirs(os.path.dirname(params['data_file']), exist_ok=True)
     with open(params['data_file'], 'wb+') as f:

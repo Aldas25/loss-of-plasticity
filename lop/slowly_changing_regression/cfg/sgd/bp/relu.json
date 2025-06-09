@@ -3,11 +3,11 @@
 
   "_comment_1_": "List of problem/experiment parameters",
   "gen_prob_data": false,
-  "num_runs":  5,
+  "num_runs":  100,
   "num_inputs": 20,
   "num_data_points": 3e6,
   "data_dir": "data/sgd/bp/relu/",
-  "env_data_dir": "data/env_data/scr/",
+  "env_data_dir": "/tmp/alenksas/data/env_data/scr/",
   "flip_after": 10000,
   "num_target_features": 100,
   "num_flipping_bits": 15,
@@ -23,7 +23,7 @@
   "hidden_activation": "relu",
   "util_type": "contribution",
   "opt": "sgd",
-  "step_size": [0.01, 0.003, 0.001],
+  "step_size": 0.001,
   "replacement_rate": 0,
   "decay_rate": 0
 }
