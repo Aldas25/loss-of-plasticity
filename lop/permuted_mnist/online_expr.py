@@ -15,7 +15,7 @@ from lop.utils.miscellaneous import nll_accuracy, compute_matrix_rank_summaries
 from lop.utils.set_seed import set_seed
 
 
-def online_expr(run_id, params: {}):
+def online_expr(params: {}):
     set_seed(params['seed']) # For reproducibility
 
     agent_type = params['agent']
@@ -132,7 +132,7 @@ def online_expr(run_id, params: {}):
     dead_neurons = torch.zeros((int(total_examples/rank_measure_period), num_hidden_layers), dtype=torch.float)
 
     iter = 0
-    mnist_data_file = f'/tmp/alenksas/data/{run_id}/mnist_'
+    mnist_data_file = f'data/mnist_'
     print(f'script online_expr. reading from data file: {mnist_data_file}')
     with open(mnist_data_file, 'rb+') as f:
         x, y, _, _ = pickle.load(f)
@@ -230,20 +230,20 @@ def save_data(file, data):
 def main(arguments):
     # tracemalloc.start()
 
-    run_id = arguments[0]
+    # run_id = arguments[0]
     #print(f'run id: {run_id}, rest of args: {arguments[1:]}')
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-c', help="Path to the file containing the parameters for the experiment",
                         type=str, default='temp_cfg/0.json')
-    args = parser.parse_args(arguments[1:])
+    args = parser.parse_args(arguments)
     cfg_file = args.c
 
     with open(cfg_file, 'r') as f:
         params = json.load(f)
 
-    online_expr(run_id, params)
+    online_expr(params)
 
     # # Get memory usage and convert to MB
     # current, peak = tracemalloc.get_traced_memory()
