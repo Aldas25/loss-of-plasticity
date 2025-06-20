@@ -21,63 +21,76 @@ def add_cfg_performance(parent_dir, cfg='', setting_idx=0, m=2*10*1000, num_runs
             data = pickle.load(f)
 
         # Online performance
-        per_param_setting_performance.append(np.array(bin_m_errs(errs=data['errs'], m=3*m)))
+        per_param_setting_performance.append(np.array(bin_m_errs(errs=data['errs'], m=m)))
 
     print(param_settings[setting_idx], setting_idx)
     return np.array(per_param_setting_performance)
 
+def generate_plot(ax, parent_dir, cfg_file, m, num_runs, title):
+    performances = []
 
-def main(arguments):
-    # parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    # change the cfg file to get the results for different activation functions, ex. '../cfg/sgd/bp/tanh.json'
-    # parser.add_argument('-c', help="Path of the file containing the parameters of the experiment", type=str,
-                            # default='../cfg/sgd/bp/relu.json')
-    # args = parser.parse_args(arguments)
-    # cfg_file = args.c
-
-    parent_dir1 = "/scratch/alenksas/results/slowly_flip-one-true_5runs"
-    parent_dir2 = "/scratch/alenksas/results/slowly_flip-one-false_10runs"
-    cfg_suf = "/cfg/sgd/bp/relu.json" 
-
-    cfg_file1 = parent_dir1 + cfg_suf
-    cfg_file2 = parent_dir2 + cfg_suf
-
-    with open(cfg_file1, 'r') as f:
+    with open(cfg_file, 'r') as f:
         params = json.load(f)
 
-    performances = []
-    m = int(params['flip_after'])*2
-
     _, param_settings = get_configurations(params=params)
-    # labels = param_settings
-    labels = ['flip_one=true', 'flip_one=false']
-    # num_runs = params['num_runs']
-    num_runs = 5
-    performances.append(add_cfg_performance(parent_dir=parent_dir1, cfg=cfg_file1, setting_idx=2, m=m, num_runs=num_runs))
-    performances.append(add_cfg_performance(parent_dir=parent_dir2, cfg=cfg_file2, setting_idx=2, m=m, num_runs=num_runs))
-    # for i in range(len(param_settings)):
-    #     performances.append(add_cfg_performance(parent_dir=parent_dir, cfg=cfg_file, setting_idx=i, m=m, num_runs=num_runs))
-    # performances.append(add_cfg_performance(cfg='../cfg/' + params['opt'] + '/bp/linear.json', setting_idx=0, m=m, num_runs=num_runs))
-    # labels.append('linear')
+    
+    labels = [p[0] for p in param_settings]
+    for i in range(len(param_settings)):
+        performances.append(add_cfg_performance(parent_dir=parent_dir, cfg=cfg_file, setting_idx=i, m=m, num_runs=num_runs))
     performances = np.array(performances)
 
-    # if params['hidden_activation'] in ['relu', 'swish', 'leaky_relu']:
-    #     yticks = [0.6, 0.8, 1., 1.2, 1.4]
-    # else:
-    #     yticks = [0.4, 0.6, 0.8, 1, 1.2]
-
-    yticks = [0.4, 0.6, 0.8, 1., 1.2, 1.4]
-
-    # print(yticks, params['hidden_activation'])
-    generate_online_performance_plot(
+    generate_online_performance_plot_for_subplot(
+        ax,
         performances=performances,
-        colors=['C3', 'C4', 'C5', 'C8', 'C9'],
-        yticks=yticks,
-        xticks=[0, 500000, 1000000],
+        colors=['C0', 'C1', 'C2'],
+        # yticks=yticks,
+        xticks=[0, int(0.5 * 3e6), int(3e6)],
         xticks_labels=['0', '1.5M', '3M'],
         m=m,
-        labels=labels
+        labels=labels,
+        fontsize=29,
+        caption=title,
     )
+
+
+
+
+def main(arguments):
+    plt.rcParams['font.family'] = 'Linux Libertine O'  
+
+    parent_dir_true = "/home/aldas/TUDelft/RP/results_copied/05-22_result-backup/slowly_flip-one-true_5runs"
+    parent_dir_false = "/home/aldas/TUDelft/RP/results_copied/05-22_result-backup/slowly_flip-one-false_5runs"
+    
+    m = 5 * 10000 * 2
+    num_runs = 5
+
+    cfg_suf = "/cfg/sgd/bp/relu.json" 
+
+    cfg_file_true = parent_dir_true + cfg_suf
+    cfg_file_false = parent_dir_false + cfg_suf
+
+    fig, ax = plt.subplots(1, 2, figsize=(14, 5))
+
+    generate_plot(ax[0], parent_dir_true, cfg_file_true, m, num_runs, 'Flipping one bit')
+    generate_plot(ax[1], parent_dir_false, cfg_file_false, m, num_runs, 'Flipping all bits')
+
+    # plt.tight_layout(h_pad=4.0)
+    plt.subplots_adjust(right=0.8, wspace=0.05) # for legend
+
+    for a in ax:
+        a.yaxis.grid(False)
+
+        a.set_ylim(0.4, 1.75)
+        a.set_yticks([0.5, 1, 1.5])
+
+    ax[1].set_yticklabels([])
+
+    handles, labels = ax[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc='center right', fontsize=30)
+    plt.savefig('comparison-flip-one.pdf', bbox_inches='tight', dpi=500)
+
+
+
 
 
 if __name__ == '__main__':

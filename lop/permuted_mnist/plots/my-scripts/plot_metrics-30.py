@@ -40,9 +40,9 @@ def add_cfg_performance(parent_dir, cfg, setting_idx=0, m=2*10*1000, num_runs=30
     print(param_settings[setting_idx], setting_idx, per_param_np_arr.mean())
     return per_param_np_arr
 
-def generate_plot_for_metric(parent_dir, num_runs, metric, algos, pref):
+def generate_plot_for_metric(parent_dir, num_runs, metric, algos, pref, m_c):
     mult_const = {'weight': 10*1000, 'accuracy': 10*1000, 'dead_neurons': 1}[metric]
-    m = {'weight': mult_const*5, 'accuracy': mult_const*5, 'dead_neurons': mult_const*5}[metric]
+    m = {'weight': mult_const*m_c, 'accuracy': mult_const*m_c, 'dead_neurons': mult_const*m_c}[metric]
 
     performances = []
 
@@ -73,15 +73,21 @@ def generate_plot_for_metric(parent_dir, num_runs, metric, algos, pref):
 
 
 def main():
-    num_runs = 4  # should be 30
+    num_runs = 30  # should be 30
     parent_dir = '/home/aldas/TUDelft/RP/results_copied/06-07_permuted-30runs'
+
+    m_c = 15
 
     for metric in ['weight', 'accuracy', 'dead_neurons']:
         print(f'-'*20)
         print(f'Plotting metric: {metric}')
 
-        generate_plot_for_metric(parent_dir=parent_dir, num_runs=num_runs, metric=metric, algos=all_algos(), pref='mnist_all')
-        generate_plot_for_metric(parent_dir=parent_dir, num_runs=num_runs, metric=metric, algos=all_algos()[1:], pref='mnist_without_bp')
+        # generate_plot_for_metric(parent_dir=parent_dir, num_runs=num_runs, metric=metric, algos=all_algos(), pref='mnist_all', m_c=m_c)
+        # generate_plot_for_metric(parent_dir=parent_dir, num_runs=num_runs, metric=metric, algos=all_algos()[1:], pref='mnist_without_bp', m_c=m_c)
+
+        generate_plot_for_metric(parent_dir=parent_dir, num_runs=num_runs, metric=metric, algos=['cbp_snp'], pref='cbp_snp', m_c=m_c)
+        # generate_plot_for_metric(parent_dir=parent_dir, num_runs=num_runs, metric=metric, algos=['cbp', 'cbp_l2', 'cbp_snp'], pref='cbp_variations')
+        generate_plot_for_metric(parent_dir=parent_dir, num_runs=num_runs, metric=metric, algos=['cbp', 'cbp_snp'], pref='cbp_variations', m_c=m_c)
 
     
 
