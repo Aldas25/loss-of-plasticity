@@ -111,6 +111,9 @@ def online_expr(params: {}):
             util_type=util_type,
             accumulate=True,
             device=dev,
+            snp_to_perturb=to_perturb,
+            snp_perturb_scale=perturb_scale,
+            weight_decay=weight_decay,
         )
 
     accuracy = nll_accuracy

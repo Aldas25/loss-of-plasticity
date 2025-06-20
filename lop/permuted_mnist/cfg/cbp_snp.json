@@ -2,12 +2,12 @@
 "model_version": "CBP on net with 3 hidden layer and 2000 hidden-units",
 
   "_comment_1_": "List of problem/experiment parameters",
-  "num_runs":  5,
-  "num_tasks": 400,
+  "num_runs":  30,
+  "num_tasks": 800,
   "use_gpu": 1,
   "data_dir": "data/cbp_snp/",
   "to_log": true,
-  "seed": 8434348,
+  "seed": 7894348,
   "temp_cfg_dir": "cbp_snp_temp_cfg",
   "util_save_every_nth_iteration": 100,
 
@@ -19,11 +19,11 @@
   "step_size": 0.003,
   "accumulate": true,
   "util_type": "contribution",
-  "replacement_rate": [1e-4, 1e-5, 1e-6],
+  "replacement_rate": 1e-6,
   "decay_rate": 0.99,
   "mt": 100,
   
-  "weight_decay": [1e-3, 1e-4, 1e-5],
+  "weight_decay": 1e-3,
   "to_perturb": true,
-  "perturb_scale": [1e-4, 1e-5, 1e-6]
+  "perturb_scale": 1e-6
 }

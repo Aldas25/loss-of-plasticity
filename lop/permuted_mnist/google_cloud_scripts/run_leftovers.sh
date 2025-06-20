@@ -6,9 +6,8 @@ cd /home/aldas/loss-of-plasticity/lop/permuted_mnist || exit 1
 conda activate lop
 
 cfg_dir=$1
-indices=$2
 
-echo "Running for config files in the dir $cfg_dir, indices $indices."
+echo "Running for config files in the dir $cfg_dir, leftovers: 4 5 6 9 10 11."
 
 log_dir="/home/aldas/loss-of-plasticity/lop/permuted_mnist/google_cloud_scripts/logs"
 mkdir -p "$log_dir"
@@ -16,13 +15,13 @@ mkdir -p "$log_dir"
 echo "Running for config files in the dir $cfg_dir"
 
 # Run the experiment for each configuration file between the given indices (inclusive)
-for i in $indices; do 
+for i in "4" "5" "6" "9" "10" "11"; do 
     f="$cfg_dir/$i.json"
 
     LOG_FILE="$log_dir/$cfg_dir-$i.log"
 
-    echo "  Running experiment with configuration file (id $i): $f, will be logged to: $LOG_FILE"
+    echo "  Running experiment with configuration file: $f, will be logged to: $LOG_FILE"
     python3 online_expr.py -c "$f" >> "$LOG_FILE" 2>&1
 done
 
-echo "Finished for config files in the dir $cfg_dir, indices $indices."
+echo "Finished for config files in the dir $cfg_dir, indices from $index_from to $index_to."
