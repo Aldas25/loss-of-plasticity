@@ -11,7 +11,11 @@ LOG_DIR="/home/aldas/loss-of-plasticity/lop/permuted_mnist/google_cloud_scripts/
 mkdir -p "$LOG_DIR"
 LOG_FILE_BASE="$LOG_DIR/run_all_log"
 
+<<<<<<< HEAD
 cfg_dir="cbp_snp_temp_cfg"
+=======
+cfg_dir="cbp_l2_temp_cfg"
+>>>>>>> ad46e1902d4c37973af5c7a05f719cfa0644aedc
 
 # Run all the experiments in parallel, using 8 cores
 taskset -c 0 ./run_experiments_in_cfg_dir.sh $cfg_dir "0 4 8 12 16 20 24 28" >> "$LOG_FILE_BASE-0.log" 2>&1 &

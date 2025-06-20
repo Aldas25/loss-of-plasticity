@@ -3,7 +3,7 @@
     
     "_comment_1_": "List of problem/experiment parameters",
     "gen_prob_data": false,
-    "num_runs":  5,
+    "num_runs":  100,
     "num_inputs": 20,
     "num_data_points": 3e6,
     "data_dir": "data/sgd/shrink-and-perturb/",
@@ -28,6 +28,6 @@
     "decay_rate": 0,
     "momentum": 0.9,
     "to_perturb": true,
-    "weight_decay": [1e-3, 1e-4, 1e-5],
-    "perturb_scale": [1e-4, 1e-5, 1e-6]
+    "weight_decay": 1e-2,
+    "perturb_scale": 1e-4
 }

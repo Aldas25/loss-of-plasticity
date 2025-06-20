@@ -8,6 +8,7 @@
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 INDEX=$1
+RUN_ID=$2
 
 echo "Starting the script to prepare the data. INDEX=$INDEX"
 
@@ -32,7 +33,7 @@ cd "$parent_dir" || exit 1
 
 env_conf_file=env_temp_cfg/$INDEX.json
 echo "generating outputs with $env_conf_file"
-python3 slowly_changing_regression.py -c $env_conf_file
+python3 slowly_changing_regression.py $RUN_ID -c $env_conf_file
 
 
 #for c_f in "cfg/sgd/cbp/relu.json" "cfg/sgd/bp/relu.json"; do
