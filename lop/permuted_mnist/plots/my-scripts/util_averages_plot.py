@@ -55,7 +55,7 @@ def mnist_generate_util_maxes_plot_for_algo(parent_dir, algo, num_runs, normaliz
 
 
 def main():
-    parent_dir = "/home/aldas/TUDelft/RP/results_copied/06-07_permuted-30runs"
+    parent_dir = "..." # fill in the folder path
     num_runs = 5  # should be 30
     num_inputs = 10*1000
 

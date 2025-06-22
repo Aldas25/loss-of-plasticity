@@ -29,14 +29,7 @@ def add_cfg_performance(cfg='', setting_idx=0, m=2*10*1000, num_runs=30):
 
 
 def main(arguments):
-    # parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    # change the cfg file to get the results for different activation functions, ex. '../cfg/sgd/bp/tanh.json'
-    # parser.add_argument('-c', help="Path of the file containing the parameters of the experiment", type=str,
-                            # default='../cfg/sgd/bp/relu.json')
-    # args = parser.parse_args(arguments)
-    # cfg_file = args.c
-
-    cfg_file = "/scratch/alenksas/results/05-18_slowly_10_runs_flip-one-true/cfg/sgd/shrink-and-perturb/snp.json"  # left: bp cbp snp l2
+    cfg_file = "/.../snp.json"  # fill in the file path
 
     with open(cfg_file, 'r') as f:
         params = json.load(f)
@@ -49,16 +42,8 @@ def main(arguments):
     num_runs = params['num_runs']
     for i in range(len(param_settings)):
         performances.append(add_cfg_performance(cfg=cfg_file, setting_idx=i, m=m, num_runs=num_runs))
-    # performances.append(add_cfg_performance(cfg='../cfg/' + params['opt'] + '/bp/linear.json', setting_idx=0, m=m, num_runs=num_runs))
-    # labels.append('linear')
     performances = np.array(performances)
 
-    # if params['hidden_activation'] in ['relu', 'swish', 'leaky_relu']:
-    #     yticks = [0.6, 0.8, 1., 1.2, 1.4]
-    # else:
-    #     yticks = [0.4, 0.6, 0.8, 1, 1.2]
-
-    # print(yticks, params['hidden_activation'])
     generate_online_performance_plot(
         performances=performances,
         colors=['C3', 'C4', 'C5', 'C8', 'C9'],

@@ -24,14 +24,11 @@ def normalize_array(arr):
 def create_histogram(util_data, dir_path='plots', file_prefix='non-normalized_util_data', title='title', normalize=False, divide_average_by=1):
     # Prepare data
     data = np.array(util_data) # Assuming util_data is a list of numpy arrays
-    # print(f'{title}, data: {data[:20]}')
-    # data = np.array([t.numpy() for t in util_data])
     if normalize:
         data = np.array([normalize_array(arr) for arr in data])
     data = data.flatten()
     print(f'{title}, data: {data[:20]}')
 
-    # plt.close('all') # in case some other plot is open
 
     fig, ax = plt.subplots(figsize=(10, 6))
     num_bins = 20
@@ -39,13 +36,11 @@ def create_histogram(util_data, dir_path='plots', file_prefix='non-normalized_ut
     hist, bins, patches = ax.hist(data, bins=num_bins, color='skyblue', edgecolor='black', alpha=0.7, weights=weights)
     
     ax.grid(axis='y', alpha=0.75, linestyle='--')
-    # ax.axvline(np.mean(util_data), color='red', linestyle='dashed', linewidth=2, label='Mean')
     
     if divide_average_by > 1:
         title = f'{title} (Averaged over {divide_average_by} runs)'
     ax.set_title(title, fontsize=14)
     plt.tight_layout()
-    # plt.show()
 
     filepath = os.path.join(dir_path, f'{file_prefix}.png')
     plt.savefig(filepath, dpi=500, bbox_inches='tight')
@@ -124,9 +119,6 @@ def main(arguments):
             util_data_all = append_util_data(util_data_all, util_save_file, iteration_id=iteration_id)
             bias_corrected_util_data_all = append_util_data(bias_corrected_util_data_all, bias_corrected_util_save_file, iteration_id=iteration_id)
 
-            # print(f'setting_idx: {setting_idx}, idx: {idx}, data size: {len(util_data)}, {len(bias_corrected_util_data)}')
-            # print(f'Util data: {util_data[:20]}')
-            # print(f'Bias corrected util data: {bias_corrected_util_data[:20]}')
 
         true_iteration_id = iteration_id * util_save_every_nth_iteration
         dividy_by = num_runs
@@ -136,7 +128,6 @@ def main(arguments):
                              )
         os.makedirs(cur_plot_save_dir, exist_ok=True)
 
-        # print(f'{param_settings}, cur: {param_settings[setting_idx][0]}')
 
         # Create histograms for this iteration with all results among the runs.
         create_histogram(util_data_all, 

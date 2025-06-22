@@ -30,8 +30,6 @@ def main(arguments):
     bash_command = "mkdir -p " + temp_cfg_dir + "/"
     subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
 
-    #bash_command = "rm -r --force " + params['data_dir']
-    #subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
     bash_command = "mkdir -p " + params['data_dir']
     subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
 

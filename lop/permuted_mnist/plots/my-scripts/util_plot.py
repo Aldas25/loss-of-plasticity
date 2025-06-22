@@ -10,7 +10,7 @@ from lop.utils.plot_online_performance import generate_online_performance_plot
 
  
 def main():
-    parent_dir = "/home/aldas/TUDelft/RP/results_copied/06-07_permuted-30runs"
+    parent_dir = "..." # fill in the folder path
 
     one_task = 10*1000
     num_tasks = 800

@@ -35,8 +35,6 @@ def add_cfg_performance(parent_dir, cfg, setting_idx=0, m=2*10*1000, num_runs=30
             rank_normlization = 3*2000/100
             per_param_setting_performance.append(np.array(bin_m_errs(errs=data['effective_ranks'].sum(dim=1)/rank_normlization, m=m)))
         else:
-            # tmp = np.array(bin_m_errs(errs=data['accuracies'] * 100, m=m))
-            # per_param_setting_performance.append(tmp[200:])
             per_param_setting_performance.append(np.array(bin_m_errs(errs=data['accuracies'] * 100, m=m)))
 
     per_param_np_arr = np.array(per_param_setting_performance)
@@ -102,7 +100,7 @@ def main():
 
 
 def appendix_util_maxes():
-    parent_dir = "/home/aldas/TUDelft/RP/results_copied/06-07_permuted-30runs"
+    parent_dir = "..." # fill in the folder path
     num_runs = 30  # should be 30
     num_inputs = 10*1000
 
@@ -228,7 +226,7 @@ def appendix_util_maxes():
 
 
 def load_appendix_util_maxes(num_runs):
-    parent_dir = "/home/aldas/TUDelft/RP/results_copied/06-07_permuted-30runs"
+    parent_dir = "..." # fill in the folder path
     num_inputs = 10*1000
 
     xticks=[0, 400*num_inputs, 800*num_inputs]
@@ -295,19 +293,11 @@ def appendix_util_histograms(iterations_to_save):
             ax.spines['top'].set_visible(False)
             ax.spines['right'].set_visible(False)
 
-        #ax[0, 0], parent_dir, algo='bp', num_runs=num_runs, iterations_to_save=iterations_to_save, 
-         #                     normalize=normalize, x_max=1.0, y_max=230.0, title='Backpropagation')
-    
-    
-    # plt.tight_layout()
-    # plt.subplots_adjust(hspace=0.2, wspace=0.1) 
-
-    # plt.show()
     plt.savefig('appendix-util-hist.pdf', bbox_inches='tight', dpi=500)
 
 
 def load_util_data_to_file1(iterations_to_save):
-    parent_dir = "/home/aldas/TUDelft/RP/results_copied/06-07_permuted-30runs"
+    parent_dir = "..." # fill in the folder path
     num_runs=30
     for algo in all_algos():
         util_data = get_cfg_util_data(parent_dir, get_cfg_dir(parent_dir, algo), iterations_to_save, 0, num_runs)
@@ -322,7 +312,7 @@ def load_util_data_to_file1(iterations_to_save):
 
 
 def combination3():
-    parent_dir = "/home/aldas/TUDelft/RP/results_copied/06-07_permuted-30runs"
+    parent_dir = "..." # fill in the folder path
     num_runs = 30  # should be 30
     num_inputs = 10*1000
 
@@ -368,14 +358,7 @@ def combination3():
         caption='Continual Backpropagation',
     )
 
-    # generate_util_maxes_plot_for_algo_for_subplot(ax[0], parent_dir, 'bp', num_runs, normalize, m, 
-    #                                               iterations_to_save, xticks, xticks_labels, 'Backpropagation', labels_mnist=True)
-    # generate_util_maxes_plot_for_algo_for_subplot(ax[1], parent_dir, 'cbp', num_runs, normalize, m, 
-    #                                               iterations_to_save, xticks, xticks_labels, 'Continual Backpropagation', labels_mnist=True)
-    
-
     for i in [0, 1]:
-        # ax[i].set_yticks([0, 0.5, 1, 1.5, 2.0])
         ax[i].set_ylim(0, 0.8)
     ax[1].set_yticklabels([])
 
@@ -395,7 +378,7 @@ def combination3():
 
 
 def combination2():
-    parent_dir = "/home/aldas/TUDelft/RP/results_copied/06-07_permuted-30runs"
+    parent_dir = "..." # fill in the folder path
 
     one_task = 10*1000
     num_tasks = 800
@@ -421,9 +404,6 @@ def combination2():
     gen_util_plot_for_subplot(ax[1, 2], parent_dir=parent_dir, algo='cbp_snp', num_runs=num_runs, iterations_to_save=iterations_to_save, 
                               normalize=normalize, x_max=1.0, y_max=145, title='CBP+SnP')
     
-    # for i in [0, 1, 2]:
-    #     ax[1, i].set_yticks([0, 0.5, 1])
-    #     ax[1, i].set_yticklabels(['0', '0.5', '1'])
 
     for i in [0, 1, 2]:
         ax[0, i].set_xticklabels([])
@@ -435,10 +415,8 @@ def combination2():
         a.spines['top'].set_visible(False)
         a.spines['right'].set_visible(False)
         
-    # plt.tight_layout(h_pad=2.0)
     plt.subplots_adjust(hspace=0.2, wspace=0.1) 
 
-    # plt.show()
     plt.savefig('mnist-combination-2.pdf', bbox_inches='tight', dpi=500)
 
 
@@ -446,13 +424,12 @@ def combination1():
 
     num_runs = 30  # should be 30
     num_runs_util = 30
-    parent_dir = '/home/aldas/TUDelft/RP/results_copied/06-07_permuted-30runs'
+    parent_dir = '...' # fill in the folder path
 
     m_c = 15
     m_util = 100 * m_c
 
     fig, ax = plt.subplots(2, 2, figsize=(18, 10))
-    # fig, ax = plt.subplots(2, 2)
 
     generate_plot_for_metric(ax[0, 0], parent_dir=parent_dir, num_runs=num_runs, metric='accuracy', algos=all_algos(), 
                              m_c=m_c, caption='Online accuracy')
@@ -464,17 +441,9 @@ def combination1():
     generate_mean_plots_for_all_algos_for_subplot(ax[1, 1], parent_dir, num_runs_util, list(range(800 * 10*1000)), True, m_util, 
                                                   [0, 400*10*1000, 800*10*1000], ['0', '400', '800'])
 
-    # ax[0, 0].set_ylim(80.2, 87.9) 
-    # ax[0, 1].set_ylim(0, 0.08) 
-    # ax[1, 0].set_ylim(-0.1, 0.16) 
-
     plt.tight_layout(h_pad=4.0)
     plt.subplots_adjust(hspace=0.35, right=0.79, wspace=0.2) # for legend
 
-    # prev_handles, prev_labels = ax[0, 0].get_legend_handles_labels()
-    # print(prev_handles)
-    # print(prev_labels)
-    # new_handles = [prev_handles[i] for i in range(0, 11, 2)]
 
     for a in ax.flatten():
         a.yaxis.grid(False)

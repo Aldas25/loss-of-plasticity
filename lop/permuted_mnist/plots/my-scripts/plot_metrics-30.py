@@ -74,7 +74,7 @@ def generate_plot_for_metric(parent_dir, num_runs, metric, algos, pref, m_c):
 
 def main():
     num_runs = 30  # should be 30
-    parent_dir = '/home/aldas/TUDelft/RP/results_copied/06-07_permuted-30runs'
+    parent_dir = '...' # fill in the folder path
 
     m_c = 15
 

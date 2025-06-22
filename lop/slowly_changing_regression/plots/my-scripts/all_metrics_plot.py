@@ -67,8 +67,6 @@ def generate_plot_for_metric(parent_dir, num_runs, metric):
     generate_online_performance_plot(
         performances=performances,
         colors=colors,
-        # yticks=yticks,
-        # xticks=[0, 500000, 1000000],
         xticks=[0, int(0.5 * 3e6), int(3e6)],
         xticks_labels=['0', '1.5M', '3M'],
         m=m,
@@ -81,7 +79,7 @@ def generate_plot_for_metric(parent_dir, num_runs, metric):
 
 def main():
 
-    parent_dir = "/home/aldas/TUDelft/RP/results_copied/06-05_slowly-100runs"
+    parent_dir = "..." # fill in the folder path
 
     num_runs = 10  # should be 100
     for metric in ['error', 'dead_neurons', 'weights']:

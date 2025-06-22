@@ -9,7 +9,6 @@ from lop.nets.linear import MyLinear
 from lop.algos.bp import Backprop
 from lop.algos.cbp import ContinualBackprop
 from lop.utils.miscellaneous import *
-import tracemalloc
 
 def expr(run_id, params: {}):
     agent_type = params['agent']
@@ -23,7 +22,6 @@ def expr(run_id, params: {}):
     weight_decay = 0.0
     accumulate = False
     perturb_scale = 0
-    #snp_shrink_rate = 1
     if 'to_log' in params.keys():
         to_log = params['to_log']
     if 'to_log_grad' in params.keys():
@@ -40,8 +38,6 @@ def expr(run_id, params: {}):
         accumulate = params['accumulate']
     if 'perturb_scale' in params.keys():
         perturb_scale = params['perturb_scale']
-    #if 'snp_shrink_rate' in params.keys():
-    #    snp_shrink_rate = params['snp_shrink_rate']
 
     num_inputs = params['num_inputs']
     num_features = params['num_features']
@@ -78,7 +74,6 @@ def expr(run_id, params: {}):
         learner = Backprop(
             net=net,
             step_size=step_size,
-            # util_save_dir=util_save_dir,
             util_save_every_nth_iteration=params['util_save_every_nth_iteration'],
             opt=opt,
             beta_1=beta_1,
@@ -86,13 +81,11 @@ def expr(run_id, params: {}):
             weight_decay=weight_decay,
             to_perturb=(perturb_scale > 0),
             perturb_scale=perturb_scale,
-            #snp_shrink_rate=snp_shrink_rate,
         )
     elif agent_type == 'cbp':
         learner = ContinualBackprop(
             net=net,
             step_size=step_size,
-            # util_save_dir=util_save_dir,
             util_save_every_nth_iteration=params['util_save_every_nth_iteration'],
             opt=opt,
             replacement_rate=replacement_rate,
@@ -105,15 +98,8 @@ def expr(run_id, params: {}):
             accumulate=accumulate,
             snp_to_perturb=(perturb_scale > 0),
             snp_perturb_scale=perturb_scale,
-            #snp_shrink_rate=snp_shrink_rate
         )
 
-    # wandb.init(
-    #     project=params['wandb_project'],
-    #     config=params,
-    #     name=params['wandb_run_name'],
-    #     group=params['wandb_group'],
-    # )
 
     with open(f'{env_file}/{run_id}', 'rb+') as f:
         inputs, outputs, _ = pickle.load(f)
@@ -127,7 +113,6 @@ def expr(run_id, params: {}):
     if to_log: weight_mag = torch.zeros((num_data_points, 2), dtype=torch.float)
     if to_log_grad: grad_mag = torch.zeros((num_data_points, 2), dtype=torch.float)
     if to_log_activation: activation = torch.zeros((num_data_points, ), dtype=torch.float)
-    #for i in tqdm(range(num_data_points)):
     for i in range(num_data_points):
         x, y = inputs[i: i+1], outputs[i: i+1]
         err = learner.learn(x=x, target=y)
@@ -144,7 +129,6 @@ def expr(run_id, params: {}):
                 activation[i] = (learner.previous_features[0].abs() > 0.9).float().mean()
         errs[i] = err
 
-        #for idx, layer_idx in enumerate(learner.net.layers_to_log):
         weight_mag_sum[i][0] = learner.net.layers[0].weight.data.abs().sum()
         weight_mag_sum[i][1] = learner.net.layers[-1].weight.data.abs().sum()
 
@@ -155,7 +139,6 @@ def expr(run_id, params: {}):
                     new_idx = int(i / dead_neurons_measure_period)
                     m = net.predict(x[:2000])[1]
                     dead_neurons[new_idx] = (m[0].abs().sum(dim=0) == 0).sum()
-                    # print('dead neurons: ', dead_neurons[new_idx])
 
 
     # Save util scores
@@ -180,7 +163,6 @@ def expr(run_id, params: {}):
 
 
 def main(arguments):
-    # tracemalloc.start()
     
     run_id = arguments[0]
 
@@ -203,16 +185,6 @@ def main(arguments):
     with open(params['data_file'], 'wb+') as f:
         pickle.dump(data, f)
 
-    # # Get memory usage and convert to MB
-    # current, peak = tracemalloc.get_traced_memory()
-    # current_mb = current / (1024 * 1024)
-    # peak_mb = peak / (1024 * 1024)
-
-    # # Print the results in MB with formatting to 2 decimal places
-    # print(f'Current memory usage: {current_mb:.2f} MB')
-    # print(f'Peak memory usage: {peak_mb:.2f} MB')
-
-    # tracemalloc.stop()
 
 
 if __name__ == '__main__':

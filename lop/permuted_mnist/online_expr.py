@@ -128,10 +128,6 @@ def online_expr(params: {}):
     weight_mag_sum = torch.zeros((total_iters, num_hidden_layers+1), dtype=torch.float)
 
     rank_measure_period = 10000
-    # effective_ranks = torch.zeros((int(total_examples/rank_measure_period), num_hidden_layers), dtype=torch.float)
-    # approximate_ranks = torch.zeros((int(total_examples/rank_measure_period), num_hidden_layers), dtype=torch.float)
-    # approximate_ranks_abs = torch.zeros((int(total_examples/rank_measure_period), num_hidden_layers), dtype=torch.float)
-    # ranks = torch.zeros((int(total_examples/rank_measure_period), num_hidden_layers), dtype=torch.float)
     dead_neurons = torch.zeros((int(total_examples/rank_measure_period), num_hidden_layers), dtype=torch.float)
 
     iter = 0
@@ -158,19 +154,13 @@ def online_expr(params: {}):
         x = x[:, pixel_permutation]
         data_permutation = np.random.permutation(examples_per_task)
         x, y = x[data_permutation], y[data_permutation]
-        # x = x[:sample_count]
-        # y = y[:sample_count]
 
         if agent_type != 'linear':
             with torch.no_grad():
                 new_idx = int(iter / rank_measure_period)
                 m = net.predict(x[:2000])[1]
                 for rep_layer_idx in range(num_hidden_layers):
-                    # ranks[new_idx][rep_layer_idx], effective_ranks[new_idx][rep_layer_idx], \
-                    # approximate_ranks[new_idx][rep_layer_idx], approximate_ranks_abs[new_idx][rep_layer_idx] = \
-                    #     compute_matrix_rank_summaries(m=m[rep_layer_idx], use_scipy=True)
                     dead_neurons[new_idx][rep_layer_idx] = (m[rep_layer_idx].abs().sum(dim=0) == 0).sum()
-                # print('approximate rank: ', approximate_ranks[new_idx], ', dead neurons: ', dead_neurons[new_idx])
 
         # for start_idx in tqdm(range(0, change_after, mini_batch_size)):
         for start_idx in range(0, change_after, mini_batch_size):
@@ -189,15 +179,10 @@ def online_expr(params: {}):
                 accuracies[iter] = accuracy(softmax(network_output, dim=1), batch_y).cpu()
             iter += 1
 
-        # print('recent accuracy', accuracies[new_iter_start:iter - 1].mean())
         if task_idx % save_after_every_n_tasks == 0:
             data = {
                 'accuracies': accuracies.cpu(),
                 'weight_mag_sum': weight_mag_sum.cpu(),
-                # 'ranks': ranks.cpu(),
-                # 'effective_ranks': effective_ranks.cpu(),
-                # 'approximate_ranks': approximate_ranks.cpu(),
-                # 'abs_approximate_ranks': approximate_ranks_abs.cpu(),
                 'dead_neurons': dead_neurons.cpu(),
             }
             save_data(file=params['data_file'], data=data)
@@ -205,10 +190,6 @@ def online_expr(params: {}):
     data = {
         'accuracies': accuracies.cpu(),
         'weight_mag_sum': weight_mag_sum.cpu(),
-        # 'ranks': ranks.cpu(),
-        # 'effective_ranks': effective_ranks.cpu(),
-        # 'approximate_ranks': approximate_ranks.cpu(),
-        # 'abs_approximate_ranks': approximate_ranks_abs.cpu(),
         'dead_neurons': dead_neurons.cpu(),
     }
     save_data(file=params['data_file'], data=data)

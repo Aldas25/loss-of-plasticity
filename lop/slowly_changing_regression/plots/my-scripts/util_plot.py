@@ -10,7 +10,7 @@ from lop.utils.plot_online_performance import generate_online_performance_plot
 
 
 def main():
-    parent_dir = "/home/aldas/TUDelft/RP/results_copied/06-05_slowly-100runs"
+    parent_dir = "..." # fill in the folder path
     num_runs = 10
     normalize = False
 

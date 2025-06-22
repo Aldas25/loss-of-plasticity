@@ -114,7 +114,7 @@ def main():
 
 
 def appendix_util_maxes(num_runs):
-    parent_dir = "/home/aldas/TUDelft/RP/results_copied/06-05_slowly-100runs"
+    parent_dir = "..." # fill in the folder path
     num_runs = 100
     normalize = False
     m = 500
@@ -222,11 +222,6 @@ def appendix_util_maxes(num_runs):
                 ax[r,c].set_yticklabels([])
             
 
-    # for i in [0, 1]:
-    #     ax[i].set_yticks([0, 0.5, 1, 1.5, 2.0])
-    #     ax[i].set_ylim(0, 2.1)
-    # ax[1].set_yticklabels([])
-
     plt.tight_layout()
     plt.subplots_adjust(right=0.78, wspace=0.07, hspace=0.2) # for legend
 
@@ -255,7 +250,6 @@ def appendix_util_histograms(iterations_to_save):
     fig = plt.figure(figsize=(12*2+2, 18*2*len(algos)//6))  # wider to fit row labels
     gs = gridspec.GridSpec(len(algos), 5, width_ratios=[0.5, 1, 1, 1, 1], wspace=0.1, hspace=0.1)
 
-    # fig, ax = plt.subplots(6, 4, figsize=(12*2, 18*2))
 
     for (r, algo) in enumerate( algos ):
 
@@ -288,19 +282,11 @@ def appendix_util_histograms(iterations_to_save):
             ax.spines['right'].set_visible(False)
 
 
-        #ax[0, 0], parent_dir, algo='bp', num_runs=num_runs, iterations_to_save=iterations_to_save, 
-         #                     normalize=normalize, x_max=1.0, y_max=230.0, title='Backpropagation')
-    
-    
-    # plt.tight_layout()
-    # plt.subplots_adjust(hspace=0.2, wspace=0.1) 
-
-    # plt.show()
     plt.savefig('appendix-util-hist.pdf', bbox_inches='tight', dpi=500)
 
 
 def load_util_data_to_file1(iterations_to_save):
-    parent_dir = "/home/aldas/TUDelft/RP/results_copied/06-05_slowly-100runs"
+    parent_dir = "..." # fill in the folder path
     num_runs=100
     for algo in all_algos():
         util_data = get_cfg_util_data(parent_dir, get_cfg_dir(parent_dir, algo), iterations_to_save, 0, num_runs)
@@ -315,7 +301,7 @@ def load_util_data_to_file1(iterations_to_save):
 
 
 def load_appendix_util_maxes(num_runs):
-    parent_dir = "/home/aldas/TUDelft/RP/results_copied/06-05_slowly-100runs"
+    parent_dir = "..." # fill in the folder path
     normalize = False
     m = 500
 
@@ -339,7 +325,7 @@ def load_appendix_util_maxes(num_runs):
 
 
 def combination3():
-    parent_dir = "/home/aldas/TUDelft/RP/results_copied/06-05_slowly-100runs"
+    parent_dir = "..." # fill in the folder path
     num_runs = 100
     normalize = False
     m = 500
@@ -377,12 +363,6 @@ def combination3():
         fontsize=29,
         caption='Continual Backpropagation',
     )
-
-    # generate_util_maxes_plot_for_algo_for_subplot(ax[0], parent_dir, 'bp', num_runs, normalize, m, 
-    #                                               iterations_to_save, xticks, xticks_labels, 'Backpropagation')
-    # generate_util_maxes_plot_for_algo_for_subplot(ax[1], parent_dir, 'cbp', num_runs, normalize, m, 
-    #                                               iterations_to_save, xticks, xticks_labels, 'Continual Backpropagation')
-    
 
     for i in [0, 1]:
         ax[i].set_yticks([0, 0.5, 1, 1.5, 2.0])
@@ -457,7 +437,7 @@ def combination2():
 
 def combination1():
 
-    parent_dir = "/home/aldas/TUDelft/RP/results_copied/06-05_slowly-100runs"
+    parent_dir = "..." # fill in the folder path
 
     num_runs = 100 # should be 100
     num_runs_util = 100
@@ -476,11 +456,6 @@ def combination1():
 
     plt.tight_layout(h_pad=4.0)
     plt.subplots_adjust(hspace=0.35, right=0.8, wspace=0.2) # for legend
-
-    # prev_handles, prev_labels = ax[0, 0].get_legend_handles_labels()
-    # print(prev_handles)
-    # print(prev_labels)
-    # new_handles = [prev_handles[i] for i in range(0, 11, 2)]
 
     for a in ax.flatten():
         a.yaxis.grid(False)

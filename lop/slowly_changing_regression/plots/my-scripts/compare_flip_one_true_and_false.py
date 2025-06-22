@@ -58,8 +58,8 @@ def generate_plot(ax, parent_dir, cfg_file, m, num_runs, title):
 def main(arguments):
     plt.rcParams['font.family'] = 'Linux Libertine O'  
 
-    parent_dir_true = "/home/aldas/TUDelft/RP/results_copied/05-22_result-backup/slowly_flip-one-true_5runs"
-    parent_dir_false = "/home/aldas/TUDelft/RP/results_copied/05-22_result-backup/slowly_flip-one-false_5runs"
+    parent_dir_true = "..." # fill in the folder path
+    parent_dir_false = "..." # fill in the folder path
     
     m = 5 * 10000 * 2
     num_runs = 5

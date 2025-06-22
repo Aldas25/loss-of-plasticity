@@ -19,10 +19,6 @@ def mnist():
     	print(f'found folder/file in root data folder, will be deleted.')
     	shutil.rmtree(root_data_folder)
     
-    #quit(0)
-    #if os.path.exists(data_file):
-    #	return
-
     batch_size = 60000
     transform = transforms.Compose(
         [transforms.ToTensor()])
@@ -57,20 +53,11 @@ def mnist():
 
 
     os.makedirs(os.path.dirname(data_file), exist_ok=True)
-    #if os.path.exists(data_file):
-    #	return
     with open(data_file, 'wb+') as f:
         pickle.dump([x, y, x_test, y_test], f)
 
     return x, y, x_test, y_test
 
-
-#def get_mnist(type='reg'):
-#    if type == 'reg':
-#        data_file = '/tmp/alenksas/data/mnist_'
-#        with open(data_file, 'rb+') as f:
-#            x, y, x_test, y_test = pickle.load(f)
-#    return x, y, x_test, y_test
 
 
 if __name__ == '__main__':

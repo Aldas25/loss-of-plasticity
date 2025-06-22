@@ -1,4 +1,4 @@
-# Loss of Plasticity in Deep Continual Learning
+# Analyzing Plasticity Through Utility Scores
 
 ## Contents
 
@@ -11,33 +11,27 @@
 
 ## Overview
 
-This repository contains the code to reproduce the experiments present in our paper titled [Loss of Plasticity in Deep Continual Learning](https://www.nature.com/articles/s41586-024-07711-7).
-A talk about this work can be found [here](https://www.youtube.com/watch?v=p_zknyfV9fY).
+This is a repository for the Bachelor thesis, title Analyzing Plasticity Through Utility Scores. 
+It is a fork of the Loss of Plasticity [repository](https://github.com/shibhansh/loss-of-plasticity) which was meant to store the code to reproduce the experiments presented in the paper titled [Loss of Plasticity in Deep Continual Learning](https://www.nature.com/articles/s41586-024-07711-7).
+
+We have extended and modified the existing code to make it suitable for our experiments concerning utility scores and their distributions. We have used Slowly-Changing Regression and Online Permuted MNIST, whereas the other problem settings are left untouched.
+
+In the corresponding folders you can find the DelftBlue, DAIC and plotting scripts.
 
 ### Abstract
-Artificial neural networks, deep-learning methods and the backpropagation algorithm form the foundation of modern machine learning and artificial intelligence.
-These methods are almost always used in two phases, one in which the weights of the network are updated and one in which the weights are held constant while the network is used or evaluated. 
-This contrasts with natural learning and many applications, which require continual learning. 
-It has been unclear whether deep-learning methods work in continual-learning settings. 
-Here we show that they do not—that standard deep-learning methods gradually lose plasticity in continual-learning settings until they learn no better than a shallow network. 
-We show such loss of plasticity using the classic ImageNet dataset and reinforcement-learning problems across a wide range of variations in the network and the learning algorithm. 
-Plasticity is maintained indefinitely only by algorithms that continually inject diversity into the network, such as our continual backpropagation algorithm, a variation of backpropagation in which a small fraction of less-used units are continually and randomly reinitialized. 
-Our results indicate that methods based on gradient descent are not enough—that sustained deep learning requires a random, non-gradient component to maintain variability and plasticity.
-
-### Citation
-Please cite our work if you find it useful:
-
-```latex
-@article{dohare2024loss,
-  title={Loss of Plasticity in Deep Continual Learning},
-  author={Dohare, Shibhansh and Hernandez-Garcia, J. Fernando and Lan, Qingfeng and Rahman, Parash and Mahmood, A. Ruapm and Sutton, Richard S.},
-  journal={Nature},
-  volume={632},
-  pages={768---774},
-  year={2024},
-  publisher={Nature Publishing Group UK London}
-}
-```
+One of the central problems in continual learning is the loss of plasticity, which is the model’s
+inability to learn new tasks. Several approaches
+have been previously proposed, such as Continual Backpropagation (CBP). This algorithm uses
+utility scores, which represent how useful the individual neurons are for computing the answer.
+We have analysed such utility score distributions
+for different algorithms: backpropagation, L2 regularization, Shrink and Perturb, CBP, and its vari-
+ants with L2 regularization and Shrink and Perturb. Our results reveal that well-performing algo-
+rithms maintain better-balanced utility score distributions and fewer neurons with scores near
+zero, indicating higher plasticity. In particular,
+CBP and its variants achieve better accuracy by
+actively redistributing utility and reinitializing underused neurons. These findings suggest that util-
+ity scores are a valuable analysis tool for understanding and improving continual learning sys-
+tems.
 
 
 ## Repository Contents
@@ -62,33 +56,21 @@ The package has been tested on Ubuntu 20.04 and python3.8. We expect this packag
 
 ## Installation Guide
 
-**Note**: Original installation guide used python3.8, I changed to path python3, which in my system is python 3.10. It also works.
-
 Create a virtual environment
 ```sh
 mkdir ~/envs
-virtualenv --no-download --python=/usr/bin/python3 ~/envs/lop
-# or: conda create --name lop python=3.9 ## somehow python 3.8 has bad dependencies (one of the requirements packages cannot be downloaded)
-# and then: conda activate lop
-source ~/envs/lop/bin/activate
-pip3 install --no-index --upgrade pip
+conda create --name lop python=3.9
+conda activate lop
+pip3 install --no-index --upgrade pip  
 ```
 
 Download the repository and install the requirements
 ```sh
-git clone https://github.com/shibhansh/loss-of-plasticity.git
+git clone https://github.com/Aldas25/loss-of-plasticity
 cd loss-of-plasticity
 pip3 install -r requirements.txt
 pip3 install -e .
-pip install -U pip setuptools   # at least for me in python3.9 gives strange warning if not updated
-```
-
-Add this lines in your `~/.zshrc` or `~/.bashrc`
-**Note**: unsure, why original setup guide has this. It's better to only turn on your environment once you need it.
-```sh
-source ~/envs/lop/bin/activate
+pip install -U pip setuptools   # to fix the warning from Setuptools
 ```
 
 Installation on a normal laptop with good internet connection should only take a few minutes
-
-[1] Schulman, J., Wolski, F., Dhariwal, P., Radford, A., & Klimov, O. (2017). Proximal policy optimization algorithms. arXiv preprint arXiv:1707.06347.
