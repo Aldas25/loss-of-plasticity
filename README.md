@@ -18,6 +18,8 @@ We have extended and modified the existing code to make it suitable for our expe
 
 In the corresponding folders you can find the DelftBlue, DAIC and plotting scripts.
 
+The thesis is authored by Aldas Lenkšas (TU Delft), and supervised by Wendelin Böhmer (TU Delft), Laurens Engwegen (TU Delft).
+
 ### Abstract
 One of the central problems in continual learning is the loss of plasticity, which is the model’s
 inability to learn new tasks. Several approaches
